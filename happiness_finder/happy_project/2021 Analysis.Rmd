@@ -11,6 +11,10 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+getwd()
+```
+
 #Load Programs
 ```{r}
 library(tidyverse)
@@ -21,7 +25,7 @@ library(here)
 
 #Load Data
 ```{r}
-happy <-read.csv("/Users/harikakovvuri/Desktop/2021.csv")
+happy <-read.csv(here("happiness_finder","happiness_data", "2021.csv"))
 happy
 ```
 

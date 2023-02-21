@@ -1,0 +1,93 @@
+---
+title: "Happy Analysis"
+author: "Harika Kovvuri"
+date: "2023-02-18"
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+getwd()
+```
+
+#Load Programs
+```{r}
+library(tidyverse)
+library(naniar)
+library(janitor)
+library(here)
+```
+
+
+#Load 2021 Data
+```{r}
+happy_2021 <-read.csv(here("happiness_data", "2021.csv")) %>% clean_names()
+happy_2021
+```
+
+#Add 2021 Year Column
+```{r}
+happy_2021$year <- "2021"
+happy_2021
+```
+
+
+#Load 2020 Data
+```{r}
+happy_2020 <-read.csv(here("happiness_data", "2020.csv")) %>% clean_names()
+happy_2020
+```
+
+#Add 2020 Year Column
+```{r}
+happy_2020$year <-"2020"
+happy_2020
+```
+
+#Retrieve Names
+```{r}
+names(happy_2020)
+```
+```{r}
+names(happy_2021)
+```
+
+#Merge Data Sets
+```{r}
+merged_happy <-rbind(happy_2021,happy_2020)
+```
+
+```{r}
+merged_happy
+```
+
+#Make New CSV File
+```{r}
+write.csv(merged_happy,"merged_happy.csv",row.names = F)
+```
+
+#Retrieve Newly Merged Data
+```{r}
+n_happy <- read.csv(here("happiness_data","merged_happy.csv"))
+n_happy
+```
+
+#Structural Analysis of New Data
+
+```{r}
+names(n_happy)
+```
+
+```{r}
+glimpse(n_happy)
+```
+
+#NA Summary
+```{r}
+naniar::miss_var_summary(n_happy)
+```

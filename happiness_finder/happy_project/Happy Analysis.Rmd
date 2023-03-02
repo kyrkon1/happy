@@ -11,9 +11,12 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Load New Package
 ```{r}
-getwd()
+#install.packages("shiny")
+#install.packages("shinydashboard")
 ```
+
 
 #Load Programs
 ```{r}
@@ -21,6 +24,9 @@ library(tidyverse)
 library(naniar)
 library(janitor)
 library(here)
+library(shiny)
+library(shinydashboard)
+library(ggplot2)
 ```
 
 
@@ -91,3 +97,40 @@ glimpse(n_happy)
 ```{r}
 naniar::miss_var_summary(n_happy)
 ```
+
+
+```{r}
+names(n_happy)
+```
+
+# Create New Data Frame
+```{r}
+narrow <- n_happy %>% 
+  select(country_name,year,social_support,healthy_life_expectancy,freedom_to_make_life_choices,generosity,perceptions_of_corruption,logged_gdp_per_capita, dystopia_residual)
+narrow
+```
+
+#2020 Narrow
+```{r}
+tw_narrow<-
+  narrow%>% 
+  filter(year=="2020")
+tw_narrow
+```
+
+```{r}
+
+names(tw_narrow)
+```
+
+#Create Stacked Bar Plot for 2020 Data
+```{r}
+tw_narrow %>% 
+ggplot(aes(x=country_name, y= social_support, fill=social_support))+
+  geom_bar(stat="identity",position="dodge")+
+  geom_bar(aes(y=healthy_life_expectancy, fill=healthy_life_expectancy ),stat= "identity",position="dodge")+
+ geom_bar(aes(y=freedom_to_make_life_choices,fill=freedom_to_make_life_choices),stat= "identity",position="dodge")+
+  geom_bar(aes(y=generosity,fill=generosity),stat= "identity",position="dodge")
+  
+```
+

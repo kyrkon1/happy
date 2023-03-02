@@ -124,13 +124,25 @@ names(tw_narrow)
 ```
 
 #Create Stacked Bar Plot for 2020 Data
+
+
 ```{r}
-tw_narrow %>% 
-ggplot(aes(x=country_name, y= social_support, fill=social_support))+
-  geom_bar(stat="identity",position="dodge")+
-  geom_bar(aes(y=healthy_life_expectancy, fill=healthy_life_expectancy ),stat= "identity",position="dodge")+
- geom_bar(aes(y=freedom_to_make_life_choices,fill=freedom_to_make_life_choices),stat= "identity",position="dodge")+
-  geom_bar(aes(y=generosity,fill=generosity),stat= "identity",position="dodge")
-  
+#make an output the clearly defines x and y
+```
+
+```{r}
+reorder <- tw_narrow %>% 
+  group_by(country_name) %>% 
+pivot_longer (-c(country_name,year),
+  names_to= "Factors",
+  values_to="Score") %>% 
+  clean_names()
+reorder
+```
+```{r}
+#reorder %>% 
+ # group_by(country_name) %>% 
+ # ggplot(aes(x=country_name,y=score, fill=factor))+
+   # geom_col()
 ```
 

@@ -25,7 +25,7 @@ library(tidyverse)
 
 ```
 ## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.4.0      ✔ purrr   1.0.1 
+## ✔ ggplot2 3.4.0      ✔ purrr   1.0.0 
 ## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
 ## ✔ tidyr   1.2.1      ✔ stringr 1.5.0 
 ## ✔ readr   2.1.3      ✔ forcats 0.5.2 
@@ -53,7 +53,7 @@ library(here)
 ```
 
 ```
-## here() starts at /Users/harikakovvuri/Desktop/happy-main/happiness_finder/happy_project
+## here() starts at /Users/hskovvur/Desktop/happy-main/happiness_finder/happy_project
 ```
 
 ```r
@@ -11440,14 +11440,45 @@ names(tw_narrow)
 
 #Create Stacked Bar Plot for 2020 Data
 
+
+
 ```r
-tw_narrow %>% 
-ggplot(aes(x=country_name, y= social_support, fill=social_support))+
-  geom_bar(stat="identity",position="dodge")+
-  geom_bar(aes(y=healthy_life_expectancy, fill=healthy_life_expectancy ),stat= "identity",position="dodge")+
- geom_bar(aes(y=freedom_to_make_life_choices,fill=freedom_to_make_life_choices),stat= "identity",position="dodge")+
-  geom_bar(aes(y=generosity,fill=generosity),stat= "identity",position="dodge")
+#make an output the clearly defines x and y
 ```
 
-![](Happy-Analysis_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+
+```r
+reorder <- tw_narrow %>% 
+  group_by(country_name) %>% 
+pivot_longer (-c(country_name,year),
+  names_to= "Factors",
+  values_to="Score") %>% 
+  clean_names()
+reorder
+```
+
+```
+## # A tibble: 1,071 × 4
+## # Groups:   country_name [153]
+##    country_name  year factors                        score
+##    <chr>        <int> <chr>                          <dbl>
+##  1 Finland       2020 social_support                0.954 
+##  2 Finland       2020 healthy_life_expectancy      71.9   
+##  3 Finland       2020 freedom_to_make_life_choices  0.949 
+##  4 Finland       2020 generosity                   -0.0595
+##  5 Finland       2020 perceptions_of_corruption     0.195 
+##  6 Finland       2020 logged_gdp_per_capita        10.6   
+##  7 Finland       2020 dystopia_residual             2.76  
+##  8 Denmark       2020 social_support                0.956 
+##  9 Denmark       2020 healthy_life_expectancy      72.4   
+## 10 Denmark       2020 freedom_to_make_life_choices  0.951 
+## # … with 1,061 more rows
+```
+
+```r
+#reorder %>% 
+ # group_by(country_name) %>% 
+ # ggplot(aes(x=country_name,y=score, fill=factor))+
+   # geom_col()
+```
 

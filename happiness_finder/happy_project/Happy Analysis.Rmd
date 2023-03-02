@@ -99,18 +99,15 @@ naniar::miss_var_summary(n_happy)
 ```
 
 
-```{r}
-names(n_happy)
-```
 
-# Create New Data Frame
+# Create New Data Frame(Specified the Factors We Want to Analyze)
 ```{r}
 narrow <- n_happy %>% 
-  select(country_name,year,social_support,healthy_life_expectancy,freedom_to_make_life_choices,generosity,perceptions_of_corruption,logged_gdp_per_capita, dystopia_residual)
+  select(country_name,ladder_score,year,social_support,healthy_life_expectancy,freedom_to_make_life_choices,generosity,perceptions_of_corruption,logged_gdp_per_capita, dystopia_residual)
 narrow
 ```
 
-#2020 Narrow
+#2020 Narrow(Puts more focus on the stats from 2020)
 ```{r}
 tw_narrow<-
   narrow%>% 
@@ -125,24 +122,79 @@ names(tw_narrow)
 
 #Create Stacked Bar Plot for 2020 Data
 
-
 ```{r}
-#make an output the clearly defines x and y
+names(tw_narrow)
 ```
+#Reorder Dataframe involves pivoting longer for the 2020 data to create a bar plot.
 
 ```{r}
 reorder <- tw_narrow %>% 
   group_by(country_name) %>% 
-pivot_longer (-c(country_name,year),
+pivot_longer (-c(country_name,year,ladder_score),
   names_to= "Factors",
   values_to="Score") %>% 
   clean_names()
 reorder
 ```
+
+#Code for plot(this is specific to tw_narrow(2020 data))
+
 ```{r}
-#reorder %>% 
- # group_by(country_name) %>% 
- # ggplot(aes(x=country_name,y=score, fill=factor))+
-   # geom_col()
+reorder %>% 
+  group_by(country_name) %>% 
+ ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=factors))+
+   geom_col(alpha=0.55)+
+  coord_flip()+
+  labs(title = "The Dependency of Happiness on 7 Factors in 2020", x= "Countries", y="Factors")+
+  theme(axis.text.y =element_text(size=3.5))
+```
+
+#Code for plot(this is specific to tw_narrow(2020 data))
+```{r}
+t1_narrow<-
+  narrow%>% 
+  filter(year=="2021")
+t1_narrow
+```
+
+
+```{r}
+revamp <- t1_narrow %>% 
+  group_by(country_name) %>% 
+pivot_longer (-c(country_name,year,ladder_score),
+  names_to= "Factors",
+  values_to="Score") %>% 
+  clean_names()
+revamp
+```
+
+```{r}
+g2<-revamp %>% 
+  group_by(country_name) %>% 
+ ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=factors))+
+   geom_col(alpha=0.55)+
+  coord_flip()+
+  labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
+  theme(axis.text.y =element_text(size=3.5))
+g2
+```
+
+#Slice Max and Min for Revamp(2021) and Reorder(2020)
+##Revamp 2021 Max
+```{r}
+revamp5 <- t1_narrow %>% 
+  top_n(5,ladder_score) %>% 
+  group_by(country_name) %>% 
+pivot_longer (-c(country_name,year,ladder_score),
+  names_to= "Factors",
+  values_to="Score")
+
+  revamp5 %>% 
+  ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=Factors))+
+   geom_col(alpha=0.55)+
+  coord_flip()+
+  labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
+  theme(axis.text.y =element_text(size=3.5))
+revamp5
 ```
 

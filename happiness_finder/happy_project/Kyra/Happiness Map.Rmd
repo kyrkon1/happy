@@ -1,0 +1,132 @@
+---
+title: "Map"
+author: "Kyra Kong"
+date: '2023-03-06'
+output: 
+  html_document: 
+    keep_md: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#installing package called maps 
+```{r}
+#install.packages("maps")
+#install.packages("leaflet")
+#install.packages("rgdal")
+#install.packages("tmap")
+```
+
+```{r}
+library(tidyverse)
+library(naniar)
+library(janitor)
+library(here)
+library(shiny)
+library(shinydashboard)
+library(ggplot2)
+library(maps)
+library(leaflet)
+library(magrittr)
+library(rvest)
+library(rgdal)
+library(rworldmap)
+library(tmap)
+```
+```{r}
+getwd()
+```
+
+##loading in 2020 and 2021 data
+
+```{r}
+happy_2020 <- read_csv("/Users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2020.csv") %>% clean_names()
+```
+
+```{r}
+happy_2021 <- read_csv("/Users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2021.csv") %>% clean_names()
+```
+```{r}
+names(happy_2020)
+```
+
+## adding year to data frames
+```{r}
+happy_2020$year <- "2020"
+happy_2021$year <- "2021"
+```
+
+## getting coordinates for each country, renaming country as region to do so as well
+
+```{r}
+happy_2020<-happy_2020 %>% 
+  rename(region = "country_name")
+```
+
+```{r}
+happy_2021<-happy_2021 %>% 
+  rename(region = "country_name")
+```
+```{r}
+names(happy_2020)
+```
+```{r}
+names(happy_2021)
+```
+
+```{r}
+mapdata<-map_data("world")
+view(mapdata)
+```
+
+```{r}
+mapdata2020 <-map_data("world")
+```
+
+```{r}
+mapdata2020<-left_join(mapdata2020,happy_2020, by="region")
+```
+
+
+```{r}
+mapdata2021<-map_data("world")
+view(mapdata2021)
+```
+
+```{r}
+mapdata2021 <-left_join(mapdata2021, happy_2021, by="region")
+View(mapdata2021)
+```
+```{r}
+glimpse(mapdata2020)
+```
+
+
+## making maps for selected variables
+
+```{r}
+summary(mapdata2020$ladder_score)
+```
+```{r}
+mapdata2020 <-mapdata2020 %>% 
+  mutate(range_ladder_score= case_when(ladder_score < 2.567 ~ "very small",
+                                       ladder_score >= 2.567 & ladder_score <=5.747 ~ "small",
+                                       ladder_score >= 5.747 & ladder_score <7.809 ~"medium",
+                                       ladder_score >= 7.809 ~ "large"))
+```
+
+
+```{r}
+map_socialsupport<-ggplot(mapdata2020, aes(x = long, y= lat, group= group,))+
+  geom_polygon(aes(fill="social_support"), color= "black")
+map_socialsupport
+```
+
+```{r}
+map_ladderscore<-ggplot(mapdata2020, aes(x=long, lat, group=group))+
+  geom_polygon(aes(fill="ladder_score"), color="black")
+map_ladderscore
+```
+

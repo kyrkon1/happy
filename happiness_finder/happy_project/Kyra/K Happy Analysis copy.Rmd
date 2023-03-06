@@ -215,8 +215,7 @@ pivot_longer (-c(country_name,year,ladder_score),
   ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=Factors))+
    geom_col(alpha=0.59)+
   coord_flip()+
-  labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
-  theme(axis.text.y =element_text(size=3.5))
+  labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")
 revampbottom5
 ```
 ## reorder max 5

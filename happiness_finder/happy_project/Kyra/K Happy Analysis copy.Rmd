@@ -1,6 +1,6 @@
 ---
 title: "Happy Analysis"
-author: "Harika Kovvuri"
+author: "Kyra Kong"
 date: "2023-02-18"
 output: 
   html_document: 
@@ -28,11 +28,14 @@ library(shiny)
 library(shinydashboard)
 library(ggplot2)
 ```
+```{r}
+getwd()
+```
 
 
 #Load 2021 Data
 ```{r}
-happy_2021 <-read.csv(here("happiness_data", "2021.csv")) %>% clean_names()
+happy_2021 <-read.csv("/Users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2021.csv") %>% clean_names()
 happy_2021
 ```
 
@@ -45,7 +48,7 @@ happy_2021
 
 #Load 2020 Data
 ```{r}
-happy_2020 <-read.csv(here("happiness_data", "2020.csv")) %>% clean_names()
+happy_2020 <-read.csv("/users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2020.csv") %>% clean_names()
 happy_2020
 ```
 
@@ -79,7 +82,7 @@ write.csv(merged_happy,"merged_happy.csv",row.names = F)
 
 #Retrieve Newly Merged Data
 ```{r}
-n_happy <- read.csv(here("happiness_data","merged_happy.csv"))
+n_happy <- read.csv("/users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/merged_happy.csv")
 n_happy
 ```
 
@@ -196,5 +199,58 @@ pivot_longer (-c(country_name,year,ladder_score),
   labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
   theme(axis.text.y =element_text(size=3.5))
 revamp5
+```
+##revamp 2021 min 
+```{r}
+revampbottom5 <- t1_narrow %>% 
+  top_n(-5,ladder_score) %>% 
+  group_by(country_name) %>% 
+pivot_longer (-c(country_name,year,ladder_score),
+  names_to= "Factors",
+  values_to="Score")
+```
+
+```{r}
+ revampbottom5 %>% 
+  ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=Factors))+
+   geom_col(alpha=0.59)+
+  coord_flip()+
+  labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
+  theme(axis.text.y =element_text(size=3.5))
+revampbottom5
+```
+## reorder max 5
+```{r}
+reordermax5 <-tw_narrow %>% 
+  top_n(5,ladder_score) %>% 
+  group_by(country_name) %>% 
+  pivot_longer(-c(country_name, year,ladder_score),
+               names_to = "Factors",
+               values_to= "Score")
+```
+
+```{r}
+reordermax5 %>% 
+  ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill= Factors))+
+  geom_col(alpha =0.55)+
+  coord_flip()+
+  labs(title = "Happiness Score In 2020", x= "Countries", y= "Factors")
+```
+
+```{r}
+reordermin <-tw_narrow %>% 
+  top_n(-5,ladder_score) %>% 
+  group_by(country_name) %>% 
+  pivot_longer(-c(country_name, year,ladder_score),
+               names_to = "Factors",
+               values_to= "Score")
+```
+
+```{r}
+reordermin %>% 
+  ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill= Factors))+
+  geom_col(alpha =0.55)+
+  coord_flip()+
+  labs(title= "Happiness Scores in 2020", x= "Countries", y= "Factors")
 ```
 

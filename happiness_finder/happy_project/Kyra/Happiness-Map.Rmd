@@ -139,51 +139,21 @@ map_socialsupport<-mapdata2020 %>%
   geom_polygon(aes(fill=social_support), color= "black")
 map_socialsupport
 ```
-
 ```{r}
-mapdata2020 %>% 
-  select(region, year, long,lat, healthy_life_expectancy,group) %>% 
-  ggplot(aes(x=long, y=lat, group=group))+
-  geom_polygon(aes(group=group, fill= "healthy_life_expectancy"))
+map_socialsupport +scale_fill_gradient(name = "Range of Factor", low = "yellow", high= "dark blue", na.value ="grey50")
 ```
 
-
 ```{r}
-ggplot(mapdata2020, aes(x=long, y= lat))+
-geom_polygon(aes(group=group, fill= "social_support"))+coord_map()
-```
-
-
-```{r}
-map_ladderscore<-ggplot(mapdata2020, aes(x=long, lat, group=group))+
-  geom_polygon(aes(fill="ladder_score"), color="black")
-map_ladderscore
-```
-
-
-## experimenting with iso codes
-
-```{r}
-iso_codes = countrycode::codelist[,c("un.name.en", "iso3c")]
-names(iso_codes) =c("Country", "ISO3")
-```
-
-#made new dataset for happy 2020
-```{r}
-iso_happy_2020 <-happy_2020 %>% 
-  rename("country" = "region")
-names(iso_happy_2020)
+map_healthy_life_expectancy <-mapdata2020 %>% 
+  ggplot(aes(x=long,y=lat,group=group))+
+  geom_polygon(aes(fill=healthy_life_expectancy),color="black")
+map_healthy_life_expectancy
 ```
 ```{r}
-world_data <-ggplot2::map_data('world')
-world_data <- fortify(world_data)
-head(world_data)
+map_healthy_life_expectancy +scale_fill_gradient(name = "Range of Factor", low = "yellow", high= "dark blue", na.value ="grey50")
 ```
 
-# matching name of countries 
-
-
-##leaflet with social support
+# map data for 2021
 
 
 

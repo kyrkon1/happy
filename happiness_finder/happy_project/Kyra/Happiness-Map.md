@@ -12,10 +12,27 @@ output:
 #installing package called maps 
 
 ```r
-#install.packages("maps")
-#install.packages("leaflet")
-#install.packages("rgdal")
-#install.packages("tmap")
+#iSnstall.packages("maps", repos = "http://cran.us.r-project.org")
+#install.packages("leaflet", repos = "http://cran.us.r-project.org")
+#install.packages("rgdal", repos = "http://cran.us.r-project.org")
+#install.packages("tmap", repos = "http://cran.us.r-project.org")
+```
+
+```r
+install.packages("mappproj", repos = "http://cran.us.r-project.org")
+```
+
+```
+## Installing package into 'C:/Users/merma/AppData/Local/R/win-library/4.2'
+## (as 'lib' is unspecified)
+```
+
+```
+## Warning: package 'mappproj' is not available for this version of R
+## 
+## A version of this package for your version of R might be available elsewhere,
+## see the ideas at
+## https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages
 ```
 
 
@@ -149,6 +166,11 @@ library(rworldmap)
 
 ```r
 library(tmap)
+library(sf)
+```
+
+```
+## Linking to GEOS 3.9.3, GDAL 3.5.2, PROJ 8.2.1; sf_use_s2() is TRUE
 ```
 
 ```r
@@ -382,6 +404,15 @@ mapdata2020 <-mapdata2020 %>%
                                        ladder_score >= 7.809 ~ "large"))
 ```
 
+```r
+summary(mapdata2020$social_support)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##   0.319   0.808   0.890   0.848   0.927   0.975   22475
+```
+
 
 
 ```r
@@ -390,7 +421,14 @@ map_socialsupport<-ggplot(mapdata2020, aes(x = long, y= lat, group= group,))+
 map_socialsupport
 ```
 
-![](Happiness-Map_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+![](Happiness-Map_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+
+
+```r
+#ggplot(mapdata2020, aes(x=long, y= lat))+
+#geom_polygon(aes(group=group, fill= #"social_support"))+coord_map()
+```
+
 
 
 ```r
@@ -399,5 +437,16 @@ map_ladderscore<-ggplot(mapdata2020, aes(x=long, lat, group=group))+
 map_ladderscore
 ```
 
-![](Happiness-Map_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+![](Happiness-Map_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
+
+
+##experimenting with leaflet
+
+```r
+colors_red <- colorNumeric(palette= "Reds", domain= NULL)
+```
+
+##leaflet with social support
+
+
 

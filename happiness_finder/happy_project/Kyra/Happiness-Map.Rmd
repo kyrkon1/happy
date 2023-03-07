@@ -13,10 +13,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #installing package called maps 
 ```{r}
-#install.packages("maps")
-#install.packages("leaflet")
-#install.packages("rgdal")
-#install.packages("tmap")
+#iSnstall.packages("maps", repos = "http://cran.us.r-project.org")
+#install.packages("leaflet", repos = "http://cran.us.r-project.org")
+#install.packages("rgdal", repos = "http://cran.us.r-project.org")
+#install.packages("tmap", repos = "http://cran.us.r-project.org")
+```
+```{r}
+#install.packages("mapproj", repos = "http://cran.us.r-project.org")
 ```
 
 ```{r}
@@ -35,6 +38,7 @@ library(rgdal)
 library(rworldmap)
 library(tmap)
 library(sf)
+library(mapproj)
 ```
 ```{r}
 getwd()
@@ -79,7 +83,7 @@ names(happy_2021)
 
 ```{r}
 mapdata<-map_data("world")
-view(mapdata)
+
 ```
 
 ```{r}
@@ -129,33 +133,33 @@ map_socialsupport
 ```
 
 ```{r}
+mapdata2020 %>% 
+  select(region, year, long,lat, healthy_life_expectancy,group) %>% 
+  ggplot(aes(x=long, y=lat, group=group))+
+  geom_polygon(aes(group=group, fill= "healthy_life_expectancy"))
+```
+
+
+```{r}
+ggplot(mapdata2020, aes(x=long, y= lat))+
+geom_polygon(aes(group=group, fill= "social_support"))+coord_map()
+```
+
+
+```{r}
 map_ladderscore<-ggplot(mapdata2020, aes(x=long, lat, group=group))+
   geom_polygon(aes(fill="ladder_score"), color="black")
 map_ladderscore
 ```
 
 
-#experimenting with leaflet
+##experimenting with leaflet
 ```{r}
 colors_red <- colorNumeric(palette= "Reds", domain= NULL)
 
 ```
 
-#leaflet with social support
-```{r}
-#map2<- leaflet() %>% 
-  #addProviderTiles("CartoDB.Voyager") %>% 
-  #addPolygons(data= mapdata2020,
-    #fillColor = ~colors_red(social_support),
-   # fillOpacity=0.75,
-   # weight= 2,
-    #color= "black")
-# %>% 
- # addLegend(
-   # pal= colors_red,
-    #values = ~social_support,
-   # title= "social_support in countries"
-  ) 
-  
-```
+##leaflet with social support
+
+
 

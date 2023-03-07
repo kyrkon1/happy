@@ -13,9 +13,10 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #installing package called maps 
 ```{r}
-#iSnstall.packages("maps", repos = "http://cran.us.r-project.org")
+#install.packages("maps", repos = "http://cran.us.r-project.org")
 #install.packages("leaflet", repos = "http://cran.us.r-project.org")
 #install.packages("rgdal", repos = "http://cran.us.r-project.org")
+#install.packages("raster")
 #install.packages("tmap", repos = "http://cran.us.r-project.org")
 #install.packages("mapproj", repos = "http://cran.us.r-project.org")
 #install.packages("countrycode")
@@ -35,7 +36,7 @@ library(magrittr)
 library(rvest)
 library(rgdal)
 library(rworldmap)
-library(tmap)
+#library(tmap)
 library(sf)
 library(mapproj)
 ```
@@ -45,13 +46,13 @@ getwd()
 
 ##loading in 2020 and 2021 data
 
-```{r}
-happy_2020 <- read_csv("/Users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2020.csv") %>% clean_names()
-```
 
 ```{r}
-happy_2021 <- read_csv("/Users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2021.csv") %>% clean_names()
+happy_2020 <- read_csv("../happiness_data/2020.csv") %>% clean_names()
+happy_2021 <- read_csv("../happiness_data/2021.csv") %>% clean_names()
 ```
+
+
 ```{r}
 names(happy_2020)
 ```
@@ -126,8 +127,16 @@ summary(mapdata2020$social_support)
 
 
 ```{r}
-map_socialsupport<-ggplot(mapdata2020, aes(x = long, y= lat, group= group,))+
-  geom_polygon(aes(fill="social_support"), color= "black")
+mapdata2020 %>% 
+  relocate(social_support) %>% 
+  filter(!is.na(social_support))
+```
+
+
+```{r}
+map_socialsupport<-mapdata2020 %>% 
+  ggplot(aes(x = long, y= lat, group=group))+
+  geom_polygon(aes(fill=social_support), color= "black")
 map_socialsupport
 ```
 

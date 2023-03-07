@@ -34,6 +34,7 @@ library(rvest)
 library(rgdal)
 library(rworldmap)
 library(tmap)
+library(sf)
 ```
 ```{r}
 getwd()
@@ -131,5 +132,30 @@ map_socialsupport
 map_ladderscore<-ggplot(mapdata2020, aes(x=long, lat, group=group))+
   geom_polygon(aes(fill="ladder_score"), color="black")
 map_ladderscore
+```
+
+
+#experimenting with leaflet
+```{r}
+colors_red <- colorNumeric(palette= "Reds", domain= NULL)
+
+```
+
+#leaflet with social support
+```{r}
+#map2<- leaflet() %>% 
+  #addProviderTiles("CartoDB.Voyager") %>% 
+  #addPolygons(data= mapdata2020,
+    #fillColor = ~colors_red(social_support),
+   # fillOpacity=0.75,
+   # weight= 2,
+    #color= "black")
+# %>% 
+ # addLegend(
+   # pal= colors_red,
+    #values = ~social_support,
+   # title= "social_support in countries"
+  ) 
+  
 ```
 

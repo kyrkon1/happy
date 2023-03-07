@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load New Package
 ```{r}
 #install.packages("shiny")
-#install.packages("shinydashboard")
+#install.packages("ggthemes")
 ```
 
 
@@ -27,59 +27,60 @@ library(here)
 library(shiny)
 library(shinydashboard)
 library(ggplot2)
+library(ggthemes)
 ```
 
 
 #Load 2021 Data
 ```{r}
-happy_2021 <-read.csv(here("happiness_data", "2021.csv")) %>% clean_names()
-happy_2021
+#happy_2021 <-read.csv(here("happiness_data", "2021.csv")) %>% clean_names()
+#happy_2021
 ```
 
 #Add 2021 Year Column
 ```{r}
-happy_2021$year <- "2021"
-happy_2021
+#happy_2021$year <- "2021"
+#happy_2021
 ```
 
 
 #Load 2020 Data
 ```{r}
-happy_2020 <-read.csv(here("happiness_data", "2020.csv")) %>% clean_names()
-happy_2020
+#happy_2020 <-read.csv(here("happiness_data", "2020.csv")) %>% clean_names()
+#happy_2020
 ```
 
 #Add 2020 Year Column
 ```{r}
-happy_2020$year <-"2020"
-happy_2020
+#happy_2020$year <-"2020"
+#happy_2020
 ```
 
 #Retrieve Names
 ```{r}
-names(happy_2020)
+#names(happy_2020)
 ```
 ```{r}
-names(happy_2021)
+#names(happy_2021)
 ```
 
 #Merge Data Sets
 ```{r}
-merged_happy <-rbind(happy_2021,happy_2020)
+#merged_happy <-rbind(happy_2021,happy_2020)
 ```
 
 ```{r}
-merged_happy
+#merged_happy
 ```
 
 #Make New CSV File
 ```{r}
-write.csv(merged_happy,"merged_happy.csv",row.names = F)
+#write.csv(merged_happy,"merged_happy.csv",row.names = F)
 ```
 
 #Retrieve Newly Merged Data
 ```{r}
-n_happy <- read.csv(here("happiness_data","merged_happy.csv"))
+n_happy <- read.csv(here("merged_happy.csv"))
 n_happy
 ```
 
@@ -146,6 +147,7 @@ reorder %>%
    geom_col(alpha=0.55)+
   coord_flip()+
   labs(title = "The Dependency of Happiness on 7 Factors in 2020", x= "Countries", y="Factors")+
+      theme_tufte()+
   theme(axis.text.y =element_text(size=3.5))
 ```
 
@@ -175,6 +177,7 @@ g2<-revamp %>%
    geom_col(alpha=0.55)+
   coord_flip()+
   labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
+      theme_tufte()+
   theme(axis.text.y =element_text(size=3.5))
 g2
 ```
@@ -194,7 +197,192 @@ pivot_longer (-c(country_name,year,ladder_score),
    geom_col(alpha=0.59)+
   coord_flip()+
   labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
+    theme_tufte()+
   theme(axis.text.y =element_text(size=3.5))
 revamp5
 ```
+
+##Revamp 2021 Min
+```{r}
+revamp6 <- t1_narrow %>% 
+  top_n(-5,ladder_score) %>% 
+  group_by(country_name) %>% 
+pivot_longer (-c(country_name,year,ladder_score),
+  names_to= "Factors",
+  values_to="Score")
+
+  revamp6 %>% 
+  ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=Factors))+
+   geom_col(alpha=0.59)+
+  coord_flip()+
+  labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
+    theme_tufte()+
+  theme(axis.text.y =element_text(size=3.5))
+revamp5
+```
+
+##Reorder 2020 Max
+```{r}
+
+reorder1 <- tw_narrow %>% 
+   top_n(5,ladder_score) %>% 
+  group_by(country_name) %>% 
+pivot_longer (-c(country_name,year,ladder_score),
+  names_to= "Factors",
+  values_to="Score") 
+
+
+  reorder1 %>% 
+  ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=Factors))+
+   geom_col(alpha=0.59)+
+  coord_flip()+
+  labs(title = "The Dependency of Happiness on 7 Factors in 2020", x= "Countries", y="Factors")+
+    theme_tufte()+
+  theme(axis.text.y =element_text(size=3.5))
+revamp5
+```
+##Reorder 2020 Min
+```{r}
+reorder2 <- tw_narrow %>% 
+   top_n(-5,ladder_score) %>% 
+  group_by(country_name) %>% 
+pivot_longer (-c(country_name,year,ladder_score),
+  names_to= "Factors",
+  values_to="Score") 
+
+
+  reorder2 %>% 
+  ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=Factors))+
+   geom_col(alpha=0.59)+
+  coord_flip()+
+  labs(title = "The Dependency of Happiness on 7 Factors in 2020", x= "Countries", y="Factors")+
+    theme_tufte()+
+  theme(axis.text.y =element_text(size=3.5))
+revamp5
+```
+
+#Statistical Analysis of the TOP 5 COUNTRIES
+```{r}
+#A point of interest is that in 2020 the fifth spot went to Norway but in 2021 it is replaced by the Netherlands. 
+
+specific <-n_happy %>% 
+  top_n(12,ladder_score)
+specific
+  
+```
+
+```{r}
+one<-specific %>% 
+  group_by(year) %>% 
+  filter(country_name=="Finland") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Finland from 2020-2021")
+one
+ 
+```
+
+```{r}
+two<-specific %>% 
+  group_by(year) %>% 
+  filter(country_name=="Denmark") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Denmark from 2020-2021")
+two
+```
+
+```{r}
+three<-specific %>% 
+  group_by(year) %>% 
+  filter(country_name=="Switzerland") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Switzerland from 2020-2021")
+  three
+```
+```{r}
+four<-specific %>% 
+  group_by(year) %>% 
+  filter(country_name=="Iceland") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Iceland from 2020-2021")
+four
+```
+```{r}
+five<-specific %>% 
+  group_by(year) %>% 
+  filter(country_name=="Netherlands") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Netherlands from 2020-2021")
+five
+```
+
+```{r}
+six<-specific %>% 
+  group_by(year) %>% 
+  filter(country_name=="Norway") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Norway from 2020-2021")
+six
+```
+
+#Attempt an App
+```{r}
+ui <- dashboardPage(
+  dashboardHeader(title = "Changes in Ladder Score "),
+  dashboardSidebar(),
+  dashboardBody(
+  fluidRow(
+  box(title = "Happiest Countries", width = 3,
+  radioButtons("x", "Select Country", choices = c( "Finland", "Denmark", "Norway", "Netherlands", "Iceland","Switzerland"), 
+              selected = "Norway")
+
+  
+  ), # close the first box
+  box(title = "Graph 1", width = 7,
+  plotOutput("plot", width = "600px", height = "600px")
+  ) # close the second box
+  ) # close the row
+  ) # close the dashboard body
+) # close the ui
+
+server <- function(input, output, session) { 
+  
+  output$plot <- renderPlot({
+    specific %>% 
+    filter(country_name==input$x) %>% 
+    ggplot(aes(x=year,y=ladder_score)) +
+      geom_line()+
+      theme_tufte(base_size = 18)+
+      theme(panel.background = element_rect(fill = "linen"))+
+      ggtitle("Changes in Ladder Score For the Happiest Countries from 2020 to 2021")+
+       theme(plot.title = element_text(size = 18.6))+
+      theme(axis.title.y = element_text(size = 16))+
+      theme(axis.title.x = element_text(size = 16))+
+      theme(axis.text.x = element_text(angle = 65, hjust = 1))+
+      labs(x = "Year", y = "Ladder Score")
+  })
+}
+  
+ 
+
+shinyApp(ui, server)
+```
+
 

@@ -72,6 +72,7 @@ library(shinydashboard)
 
 ```r
 library(ggplot2)
+library(ggthemes)
 ```
 
 ```r
@@ -12043,7 +12044,7 @@ pivot_longer (-c(country_name,year,ladder_score),
   ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=Factors))+
    geom_col(alpha=0.59)+
   coord_flip()+
-  labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")
+  labs(title = "Bottom 5 Countries Happiness 2021", x= "Countries", y="Factors")
 ```
 
 ![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-28-1.png)<!-- -->
@@ -12107,8 +12108,162 @@ reordermin %>%
   ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill= Factors))+
   geom_col(alpha =0.55)+
   coord_flip()+
-  labs(title= "Happiness Scores in 2020", x= "Countries", y= "Factors")
+  labs(title= "Least Happiness Scores in 2020", x= "Countries", y= "Factors")
 ```
 
 ![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
+
+## analysis for bottom 5 countries ladder scores 
+
+```r
+tabyl(reordermin$country_name)
+```
+
+```
+##   reordermin$country_name n percent
+##               Afghanistan 7     0.2
+##  Central African Republic 7     0.2
+##                    Rwanda 7     0.2
+##               South Sudan 7     0.2
+##                  Zimbabwe 7     0.2
+```
+
+
+```r
+tabyl(revampbottom5$country_name)
+```
+
+```
+##  revampbottom5$country_name n percent
+##                 Afghanistan 7     0.2
+##                    Botswana 7     0.2
+##                     Lesotho 7     0.2
+##                      Rwanda 7     0.2
+##                    Zimbabwe 7     0.2
+```
+Similar country names are Afghanistan, Rwanda, and Zimbabwe.
+
+Lesotho went from 11th least happiest country in 2020 to the 5th  least happiest country in 2021.
+Botswana was in 7th least happiest country in 2020 and went to the 4th least happiest country in 2021.
+Central African Republic was the 5th least happiest country in 2020 and was not listed in the dataset in 2021.
+
+
+#ladder scores changes from 2020 to 2021
+
+There's only one data set for Central African Republic
+
+
+```r
+merged_happy %>% 
+  group_by(year) %>% 
+  select(country_name, ladder_score, year) %>% 
+  filter(country_name == "Central African Republic")
+```
+
+```
+## # A tibble: 1 × 3
+## # Groups:   year [1]
+##   country_name             ladder_score year 
+##   <chr>                           <dbl> <chr>
+## 1 Central African Republic         3.48 2020
+```
+
+```r
+reordermin %>% 
+  ggplot(aes(country_name, y= ladder_score, fill= country_name))+
+  geom_col()+
+  coord_flip()
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-36-1.png)<!-- -->
+
+```r
+revampbottom5 %>% 
+  ggplot(aes(x=country_name, y= ladder_score, fill = country_name))+
+  geom_col()+
+  coord_flip()
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-37-1.png)<!-- -->
+
+
+```r
+n_bottom_happy <-n_happy %>% 
+  top_n(-30, ladder_score)
+n_bottom_happy %>% 
+  group_by(country_name)
+```
+
+```
+## # A tibble: 30 × 21
+## # Groups:   country_name [17]
+##    country_name region…¹ ladde…² stand…³ upper…⁴ lower…⁵ logge…⁶ socia…⁷ healt…⁸
+##    <chr>        <chr>      <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+##  1 Togo         Sub-Sah…    4.11   0.077    4.26    3.96    7.36   0.569    54.9
+##  2 Zambia       Sub-Sah…    4.07   0.069    4.21    3.94    8.14   0.708    55.8
+##  3 Sierra Leone Sub-Sah…    3.85   0.077    4.00    3.70    7.43   0.63     51.7
+##  4 India        South A…    3.82   0.026    3.87    3.77    8.76   0.603    60.6
+##  5 Burundi      Sub-Sah…    3.78   0.107    3.98    3.56    6.64   0.49     53.4
+##  6 Yemen        Middle …    3.66   0.07     3.79    3.52    7.58   0.832    57.1
+##  7 Tanzania     Sub-Sah…    3.62   0.071    3.76    3.48    7.88   0.702    58.0
+##  8 Haiti        Latin A…    3.62   0.173    3.95    3.28    7.48   0.54     55.7
+##  9 Malawi       Sub-Sah…    3.6    0.092    3.78    3.42    6.96   0.537    57.9
+## 10 Lesotho      Sub-Sah…    3.51   0.12     3.75    3.28    7.93   0.787    48.7
+## # … with 20 more rows, 12 more variables: freedom_to_make_life_choices <dbl>,
+## #   generosity <dbl>, perceptions_of_corruption <dbl>,
+## #   ladder_score_in_dystopia <dbl>, explained_by_log_gdp_per_capita <dbl>,
+## #   explained_by_social_support <dbl>,
+## #   explained_by_healthy_life_expectancy <dbl>,
+## #   explained_by_freedom_to_make_life_choices <dbl>,
+## #   explained_by_generosity <dbl>, …
+```
+Similar country names are Afghanistan, Rwanda, and Zimbabwe.
+
+Lesotho went from 11th least happiest country in 2020 to the 5th  least happiest country in 2021.
+Botswana was in 7th least happiest country in 2020 and went to the 4th least happiest country in 2021.
+Central African Republic was the 5th least happiest country in 2020 and was not listed in the dataset in 2021.
+
+
+```r
+least_happy <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Afghanistan") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Afghanistan from 2020-2021")
+least_happy
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-39-1.png)<!-- -->
+
+```r
+second_least_happy <-n_bottom_happy %>% 
+group_by(year) %>% 
+  filter(country_name=="Zimbabwe") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Zimbabwe from 2020-2021")
+second_least_happy
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-40-1.png)<!-- -->
+
+
+```r
+third_least_happy <-n_bottom_happy %>% 
+  group_by(year) %>% 
+  filter(country_name=="Rwanda") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Rwanda from 2020-2021")
+third_least_happy
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-41-1.png)<!-- -->
 

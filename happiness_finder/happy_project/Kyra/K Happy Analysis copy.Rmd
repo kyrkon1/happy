@@ -27,6 +27,7 @@ library(here)
 library(shiny)
 library(shinydashboard)
 library(ggplot2)
+library(ggthemes)
 ```
 ```{r}
 getwd()
@@ -215,7 +216,7 @@ pivot_longer (-c(country_name,year,ladder_score),
   ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=Factors))+
    geom_col(alpha=0.59)+
   coord_flip()+
-  labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")
+  labs(title = "Bottom 5 Countries Happiness 2021", x= "Countries", y="Factors")
 revampbottom5
 ```
 ## reorder max 5
@@ -250,6 +251,91 @@ reordermin %>%
   ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill= Factors))+
   geom_col(alpha =0.55)+
   coord_flip()+
-  labs(title= "Happiness Scores in 2020", x= "Countries", y= "Factors")
+  labs(title= "Least Happiness Scores in 2020", x= "Countries", y= "Factors")
+```
+
+## analysis for bottom 5 countries ladder scores 
+```{r}
+tabyl(reordermin$country_name)
+```
+
+```{r}
+tabyl(revampbottom5$country_name)
+```
+Similar country names are Afghanistan, Rwanda, and Zimbabwe.
+
+Lesotho went from 11th least happiest country in 2020 to the 5th  least happiest country in 2021.
+Botswana was in 7th least happiest country in 2020 and went to the 4th least happiest country in 2021.
+Central African Republic was the 5th least happiest country in 2020 and was not listed in the dataset in 2021.
+
+
+#ladder scores changes from 2020 to 2021
+
+There's only one data set for Central African Republic
+
+```{r}
+merged_happy %>% 
+  group_by(year) %>% 
+  select(country_name, ladder_score, year) %>% 
+  filter(country_name == "Central African Republic")
+```
+```{r}
+reordermin %>% 
+  ggplot(aes(country_name, y= ladder_score, fill= country_name))+
+  geom_col()+
+  coord_flip()
+```
+```{r}
+revampbottom5 %>% 
+  ggplot(aes(x=country_name, y= ladder_score, fill = country_name))+
+  geom_col()+
+  coord_flip()
+```
+
+```{r}
+n_bottom_happy <-n_happy %>% 
+  top_n(-30, ladder_score)
+n_bottom_happy %>% 
+  group_by(country_name)
+```
+Similar country names are Afghanistan, Rwanda, and Zimbabwe.
+
+Lesotho went from 11th least happiest country in 2020 to the 5th  least happiest country in 2021.
+Botswana was in 7th least happiest country in 2020 and went to the 4th least happiest country in 2021.
+Central African Republic was the 5th least happiest country in 2020 and was not listed in the dataset in 2021.
+
+```{r}
+least_happy <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Afghanistan") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Afghanistan from 2020-2021")
+least_happy
+```
+```{r}
+second_least_happy <-n_bottom_happy %>% 
+group_by(year) %>% 
+  filter(country_name=="Zimbabwe") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Zimbabwe from 2020-2021")
+second_least_happy
+```
+
+```{r}
+third_least_happy <-n_bottom_happy %>% 
+  group_by(year) %>% 
+  filter(country_name=="Rwanda") %>% 
+  ggplot(aes(x=year,y=ladder_score))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Ladder Score",title="Trend in Ladder Scores for Rwanda from 2020-2021")
+third_least_happy
 ```
 

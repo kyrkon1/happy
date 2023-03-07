@@ -16,23 +16,8 @@ output:
 #install.packages("leaflet", repos = "http://cran.us.r-project.org")
 #install.packages("rgdal", repos = "http://cran.us.r-project.org")
 #install.packages("tmap", repos = "http://cran.us.r-project.org")
-```
-
-```r
-install.packages("mappproj", repos = "http://cran.us.r-project.org")
-```
-
-```
-## Installing package into 'C:/Users/merma/AppData/Local/R/win-library/4.2'
-## (as 'lib' is unspecified)
-```
-
-```
-## Warning: package 'mappproj' is not available for this version of R
-## 
-## A version of this package for your version of R might be available elsewhere,
-## see the ideas at
-## https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-packages
+#install.packages("mapproj", repos = "http://cran.us.r-project.org")
+#install.packages("countrycode")
 ```
 
 
@@ -171,6 +156,10 @@ library(sf)
 
 ```
 ## Linking to GEOS 3.9.3, GDAL 3.5.2, PROJ 8.2.1; sf_use_s2() is TRUE
+```
+
+```r
+library(mapproj)
 ```
 
 ```r
@@ -322,7 +311,6 @@ names(happy_2021)
 
 ```r
 mapdata<-map_data("world")
-view(mapdata)
 ```
 
 
@@ -421,13 +409,26 @@ map_socialsupport<-ggplot(mapdata2020, aes(x = long, y= lat, group= group,))+
 map_socialsupport
 ```
 
-![](Happiness-Map_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+![](Happiness-Map_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
 
 
 ```r
-#ggplot(mapdata2020, aes(x=long, y= lat))+
-#geom_polygon(aes(group=group, fill= #"social_support"))+coord_map()
+mapdata2020 %>% 
+  select(region, year, long,lat, healthy_life_expectancy,group) %>% 
+  ggplot(aes(x=long, y=lat, group=group))+
+  geom_polygon(aes(group=group, fill= "healthy_life_expectancy"))
 ```
+
+![](Happiness-Map_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+
+
+
+```r
+ggplot(mapdata2020, aes(x=long, y= lat))+
+geom_polygon(aes(group=group, fill= "social_support"))+coord_map()
+```
+
+![](Happiness-Map_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
 
 
@@ -440,11 +441,64 @@ map_ladderscore
 ![](Happiness-Map_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
 
 
-##experimenting with leaflet
+## experimenting with iso codes
+
 
 ```r
-colors_red <- colorNumeric(palette= "Reds", domain= NULL)
+iso_codes = countrycode::codelist[,c("un.name.en", "iso3c")]
+names(iso_codes) =c("Country", "ISO3")
 ```
+
+#made new dataset for happy 2020
+
+```r
+iso_happy_2020 <-happy_2020 %>% 
+  rename("country" = "region")
+names(iso_happy_2020)
+```
+
+```
+##  [1] "country"                                  
+##  [2] "regional_indicator"                       
+##  [3] "ladder_score"                             
+##  [4] "standard_error_of_ladder_score"           
+##  [5] "upperwhisker"                             
+##  [6] "lowerwhisker"                             
+##  [7] "logged_gdp_per_capita"                    
+##  [8] "social_support"                           
+##  [9] "healthy_life_expectancy"                  
+## [10] "freedom_to_make_life_choices"             
+## [11] "generosity"                               
+## [12] "perceptions_of_corruption"                
+## [13] "ladder_score_in_dystopia"                 
+## [14] "explained_by_log_gdp_per_capita"          
+## [15] "explained_by_social_support"              
+## [16] "explained_by_healthy_life_expectancy"     
+## [17] "explained_by_freedom_to_make_life_choices"
+## [18] "explained_by_generosity"                  
+## [19] "explained_by_perceptions_of_corruption"   
+## [20] "dystopia_residual"                        
+## [21] "year"
+```
+
+```r
+world_data <-ggplot2::map_data('world')
+world_data <- fortify(world_data)
+head(world_data)
+```
+
+```
+##        long      lat group order region subregion
+## 1 -69.89912 12.45200     1     1  Aruba      <NA>
+## 2 -69.89571 12.42300     1     2  Aruba      <NA>
+## 3 -69.94219 12.43853     1     3  Aruba      <NA>
+## 4 -70.00415 12.50049     1     4  Aruba      <NA>
+## 5 -70.06612 12.54697     1     5  Aruba      <NA>
+## 6 -70.05088 12.59707     1     6  Aruba      <NA>
+```
+
+# matching name of countries 
+
 
 ##leaflet with social support
 

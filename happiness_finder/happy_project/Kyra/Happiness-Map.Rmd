@@ -17,9 +17,8 @@ knitr::opts_chunk$set(echo = TRUE)
 #install.packages("leaflet", repos = "http://cran.us.r-project.org")
 #install.packages("rgdal", repos = "http://cran.us.r-project.org")
 #install.packages("tmap", repos = "http://cran.us.r-project.org")
-```
-```{r}
 #install.packages("mapproj", repos = "http://cran.us.r-project.org")
+#install.packages("countrycode")
 ```
 
 ```{r}
@@ -153,11 +152,27 @@ map_ladderscore
 ```
 
 
-##experimenting with leaflet
-```{r}
-colors_red <- colorNumeric(palette= "Reds", domain= NULL)
+## experimenting with iso codes
 
+```{r}
+iso_codes = countrycode::codelist[,c("un.name.en", "iso3c")]
+names(iso_codes) =c("Country", "ISO3")
 ```
+
+#made new dataset for happy 2020
+```{r}
+iso_happy_2020 <-happy_2020 %>% 
+  rename("country" = "region")
+names(iso_happy_2020)
+```
+```{r}
+world_data <-ggplot2::map_data('world')
+world_data <- fortify(world_data)
+head(world_data)
+```
+
+# matching name of countries 
+
 
 ##leaflet with social support
 

@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #install.packages("leaflet")
 #install.packages("rgdal")
 #install.packages("tmap")
+install.packages("raster")
 ```
 
 ```{r}

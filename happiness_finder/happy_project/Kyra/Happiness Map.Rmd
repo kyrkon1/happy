@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 #install.packages("leaflet")
 #install.packages("rgdal")
 #install.packages("tmap")
-install.packages("raster")
+#install.packages("raster")
 ```
 
 ```{r}
@@ -43,11 +43,11 @@ getwd()
 ##loading in 2020 and 2021 data
 
 ```{r}
-happy_2020 <- read_csv("/Users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2020.csv") %>% clean_names()
+happy_2020 <- read_csv("/Users/kyrkon38/Documents/GitHub/happy/happiness_finder/happy_project/happiness_data/2020.csv") %>% clean_names()
 ```
 
 ```{r}
-happy_2021 <- read_csv("/Users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2021.csv") %>% clean_names()
+happy_2021 <- read_csv("/Users/kyrkon38/Documents/GitHub/happy/happiness_finder/happy_project/happiness_data/2021.csv") %>% clean_names()
 ```
 ```{r}
 names(happy_2020)
@@ -79,7 +79,6 @@ names(happy_2021)
 
 ```{r}
 mapdata<-map_data("world")
-view(mapdata)
 ```
 
 ```{r}
@@ -87,25 +86,32 @@ mapdata2020 <-map_data("world")
 ```
 
 ```{r}
-mapdata2020<-left_join(mapdata2020,happy_2020, by="region")
+mapdata2020<-left_join(mapdata2020,happy_2020, by="region") %>% 
+  group_by(region)
 ```
 
 
 ```{r}
 mapdata2021<-map_data("world")
-view(mapdata2021)
 ```
 
 ```{r}
 mapdata2021 <-left_join(mapdata2021, happy_2021, by="region")
-View(mapdata2021)
 ```
 ```{r}
 glimpse(mapdata2020)
 ```
+```{r}
+glimpse(mapdata2021)
+```
 
 
 ## making maps for selected variables
+
+```{r}
+data("World")
+```
+
 
 ```{r}
 summary(mapdata2020$ladder_score)
@@ -123,7 +129,7 @@ summary(mapdata2020$social_support)
 
 
 ```{r}
-map_socialsupport<-ggplot(mapdata2020, aes(x = long, y= lat, group= group,))+
+map_socialsupport<-ggplot(mapdata2020, aes(x = long, y= lat, group = group, fill = "social_support"))+
   geom_polygon(aes(fill="social_support"), color= "black")
 map_socialsupport
 ```

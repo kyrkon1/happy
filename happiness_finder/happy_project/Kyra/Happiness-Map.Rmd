@@ -5,6 +5,7 @@ date: '2023-03-06'
 output: 
   html_document: 
     keep_md: yes
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -155,5 +156,84 @@ map_healthy_life_expectancy +scale_fill_gradient(name = "Range of Factor", low =
 
 # map data for 2021
 
+```{r}
+map2_social_support <-
+  mapdata2021 %>% 
+  ggplot(aes(x=long, y=lat, group=group))+
+  geom_polygon(aes(fill=social_support), color= "black")
+
+map2_social_support +
+  scale_fill_gradient(name= "Range of Factor", low= "yellow", high = "dark blue", na.value = "grey50")
+  
+```
 
 
+```{r}
+map2_healthy_life_expectancy <-mapdata2021 %>% 
+  ggplot(aes(x=long, y=lat,group=group))+
+  geom_polygon(aes(fill=healthy_life_expectancy), color= "black")
+
+map2_healthy_life_expectancy+
+  scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")
+```
+## making a shiny app for the factors that we are interested in
+Factors: social_support, healthy_life_expectancy, freedom_to_make_life_choices, generosity, perceptions_of_corruption, ladder_score
+
+```{r}
+names(mapdata2020)
+```
+
+## Shiny App for MapData in 2020
+```{r}
+library(shiny)
+
+ui <- dashboardPage(
+  dashboardHeader(title="2020 World Map"),
+  dashboardSidebar(disable =T),
+  dashboardBody(selectInput("x", "Select Factor Variable", choices =c("ladder_score", "social_support", "healthy_life_expectancy", "freedom_to_make_life_choices", "generosity", "perceptions_of_corruption"), selected= "ladder_score"),
+                           plotOutput("plot", width = "800px", height = "500px")
+                                        ))
+  
+
+server <- function(input, output, session) {
+  session$onSessionEnded(stopApp)
+  output$plot <- renderPlot({
+    ggplot(mapdata2020,aes(x=long, y=lat,group=group))+
+  geom_polygon(aes_string(fill=input$x), color= "black")+
+       scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")+
+      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors in 2020")
+      
+  })
+  
+}
+
+shinyApp(ui, server)
+```
+
+## Shiny App for MapData in 2021
+
+```{r}
+library(shiny)
+
+ui <- dashboardPage(
+  dashboardHeader(title="2021 World Map"),
+  dashboardSidebar(disable =T),
+  dashboardBody(selectInput("x", "Select Factor Variable", choices =c("ladder_score", "social_support", "healthy_life_expectancy", "freedom_to_make_life_choices", "generosity", "perceptions_of_corruption"), selected= "ladder_score"),
+                           plotOutput("plot", width = "800px", height = "500px")
+                                        ))
+  
+
+server <- function(input, output, session) {
+  session$onSessionEnded(stopApp)
+  output$plot <- renderPlot({
+    ggplot(mapdata2021,aes(x=long, y=lat,group=group))+
+  geom_polygon(aes_string(fill=input$x), color= "black")+
+       scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")+
+      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors in 2021")
+      
+  })
+  
+}
+
+shinyApp(ui, server)
+```

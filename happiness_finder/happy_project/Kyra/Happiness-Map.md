@@ -37492,4 +37492,129 @@ map_healthy_life_expectancy +scale_fill_gradient(name = "Range of Factor", low =
 # map data for 2021
 
 
+```r
+map2_social_support <-
+  mapdata2021 %>% 
+  ggplot(aes(x=long, y=lat, group=group))+
+  geom_polygon(aes(fill=social_support), color= "black")
 
+map2_social_support +
+  scale_fill_gradient(name= "Range of Factor", low= "yellow", high = "dark blue", na.value = "grey50")
+```
+
+![](Happiness-Map_files/figure-html/unnamed-chunk-25-1.png)<!-- -->
+
+
+
+```r
+map2_healthy_life_expectancy <-mapdata2021 %>% 
+  ggplot(aes(x=long, y=lat,group=group))+
+  geom_polygon(aes(fill=healthy_life_expectancy), color= "black")
+
+map2_healthy_life_expectancy+
+  scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")
+```
+
+![](Happiness-Map_files/figure-html/unnamed-chunk-26-1.png)<!-- -->
+## making a shiny app for the factors that we are interested in
+Factors: social_support, healthy_life_expectancy, freedom_to_make_life_choices, generosity, perceptions_of_corruption, ladder_score
+
+
+```r
+names(mapdata2020)
+```
+
+```
+##  [1] "long"                                     
+##  [2] "lat"                                      
+##  [3] "group"                                    
+##  [4] "order"                                    
+##  [5] "region"                                   
+##  [6] "subregion"                                
+##  [7] "regional_indicator"                       
+##  [8] "ladder_score"                             
+##  [9] "standard_error_of_ladder_score"           
+## [10] "upperwhisker"                             
+## [11] "lowerwhisker"                             
+## [12] "logged_gdp_per_capita"                    
+## [13] "social_support"                           
+## [14] "healthy_life_expectancy"                  
+## [15] "freedom_to_make_life_choices"             
+## [16] "generosity"                               
+## [17] "perceptions_of_corruption"                
+## [18] "ladder_score_in_dystopia"                 
+## [19] "explained_by_log_gdp_per_capita"          
+## [20] "explained_by_social_support"              
+## [21] "explained_by_healthy_life_expectancy"     
+## [22] "explained_by_freedom_to_make_life_choices"
+## [23] "explained_by_generosity"                  
+## [24] "explained_by_perceptions_of_corruption"   
+## [25] "dystopia_residual"                        
+## [26] "year"                                     
+## [27] "range_ladder_score"
+```
+
+## Shiny App for MapData in 2020
+
+```r
+library(shiny)
+
+ui <- dashboardPage(
+  dashboardHeader(title="2020 World Map"),
+  dashboardSidebar(disable =T),
+  dashboardBody(selectInput("x", "Select Factor Variable", choices =c("ladder_score", "social_support", "healthy_life_expectancy", "freedom_to_make_life_choices", "generosity", "perceptions_of_corruption"), selected= "ladder_score"),
+                           plotOutput("plot", width = "800px", height = "500px")
+                                        ))
+  
+
+server <- function(input, output, session) {
+  session$onSessionEnded(stopApp)
+  output$plot <- renderPlot({
+    ggplot(mapdata2020,aes(x=long, y=lat,group=group))+
+  geom_polygon(aes_string(fill=input$x), color= "black")+
+       scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")+
+      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors in 2020")
+      
+  })
+  
+}
+
+shinyApp(ui, server)
+```
+
+```{=html}
+<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+```
+
+## Shiny App for MapData in 2021
+
+
+```r
+library(shiny)
+
+ui <- dashboardPage(
+  dashboardHeader(title="2021 World Map"),
+  dashboardSidebar(disable =T),
+  dashboardBody(selectInput("x", "Select Factor Variable", choices =c("ladder_score", "social_support", "healthy_life_expectancy", "freedom_to_make_life_choices", "generosity", "perceptions_of_corruption"), selected= "ladder_score"),
+                           plotOutput("plot", width = "800px", height = "500px")
+                                        ))
+  
+
+server <- function(input, output, session) {
+  session$onSessionEnded(stopApp)
+  output$plot <- renderPlot({
+    ggplot(mapdata2021,aes(x=long, y=lat,group=group))+
+  geom_polygon(aes_string(fill=input$x), color= "black")+
+       scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")+
+      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors in 2021")
+      
+  })
+  
+}
+
+shinyApp(ui, server)
+```
+
+```{=html}
+<div style="width: 100% ; height: 400px ; text-align: center; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;" class="muted well">Shiny applications not supported in static R Markdown documents</div>
+```

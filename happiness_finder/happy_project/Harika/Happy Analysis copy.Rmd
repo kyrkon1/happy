@@ -265,8 +265,11 @@ revamp5
 ```{r}
 #A point of interest is that in 2020 the fifth spot went to Norway but in 2021 it is replaced by the Netherlands. 
 
-specific <-n_happy %>% 
-  top_n(12,ladder_score)
+specific <-
+  n_happy %>% 
+  top_n(12,ladder_score) %>% 
+  bind_rows(n_happy %>% 
+              top_n(-12,ladder_score)) %>% filter(country_name != "Tanzania")
 specific
   
 ```
@@ -349,8 +352,8 @@ ui <- dashboardPage(
   dashboardSidebar(),
   dashboardBody(
   fluidRow(
-  box(title = "Happiest Countries", width = 3,
-  radioButtons("x", "Select Country", choices = c( "Finland", "Denmark", "Norway", "Netherlands", "Iceland","Switzerland"), 
+  box(title = "Happiest and Least Happiest Countries", width = 3,
+  radioButtons("x", "Select Country", choices = c( "Finland", "Denmark", "Norway", "Netherlands", "Iceland","Switzerland","Zimbabwe","South Sudan","Rwanda","Central African Republic","Afghanistan","Lesotho","Botswana"), 
               selected = "Norway")
 
   
@@ -369,12 +372,12 @@ server <- function(input, output, session) {
     filter(country_name==input$x) %>% 
     ggplot(aes(x=year,y=ladder_score)) +
       geom_line()+
-      theme_tufte(base_size = 18)+
+      theme_tufte(base_size = 16)+
       theme(panel.background = element_rect(fill = "linen"))+
-      ggtitle("Changes in Ladder Score For the Happiest Countries from 2020 to 2021")+
-       theme(plot.title = element_text(size = 18.6))+
-      theme(axis.title.y = element_text(size = 16))+
-      theme(axis.title.x = element_text(size = 16))+
+      ggtitle("Changes in Ladder Score by Year For the Happiest and Least Happiest Countries")+
+       theme(plot.title = element_text(size = 16))+
+      theme(axis.title.y = element_text(size = 15))+
+      theme(axis.title.x = element_text(size = 15))+
       theme(axis.text.x = element_text(angle = 65, hjust = 1))+
       labs(x = "Year", y = "Ladder Score")
   })

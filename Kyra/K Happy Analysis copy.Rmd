@@ -150,7 +150,7 @@ reorder %>%
    geom_col(alpha=0.55)+
   coord_flip()+
   labs(title = "The Dependency of Happiness on 7 Factors in 2020", x= "Countries", y="Factors")+
-  theme(axis.text.y =element_text(size=3.5))
+  theme(axis.text.y =element_text(size=3.0))
 ```
 
 #Code for plot(this is specific to tw_narrow(2020 data))
@@ -636,3 +636,89 @@ Rwanda: increased in social support by 2.06%
 Central African Republic: no info in 2021, NA for percent change in social support
 Botswana: increased in social support by 0.62%
 Lesotho: Increased in social support by 0.833%
+
+
+## analysis for the top 5 countries
+
+```{r}
+specific <-
+  n_happy %>% 
+  top_n(12,ladder_score) %>% 
+  bind_rows(n_happy %>% 
+              top_n(-12,ladder_score)) %>% filter(country_name != "Tanzania")
+specific
+```
+
+## ladder score 
+Top 5 countries for 2020 and 2021:  Finland, Denmark, Switzerland, Iceland, Norway, Netherlands
+
+```{r}
+n_top_ladder <- specific %>% 
+select(country_name, ladder_score, year)
+n_top_ladder
+```
+
+```{r}
+n_top_ladder <-n_top_ladder %>% 
+  pivot_wider(names_from= "year", names_prefix = "yr_", values_from = ladder_score) 
+```
+```{r}
+n_top_ladder <- n_top_ladder %>% 
+  select(country_name, yr_2020, yr_2021)
+```
+
+
+```{r}
+n_top_ladder %>% 
+  filter(country_name == "Finland" | country_name == "Denmark" | country_name== "Switzerland" | country_name == "Iceland" | country_name == "Netherlands" | country_name == "Norway") %>% 
+  mutate(perc_change_ladder_score = (yr_2021-yr_2020)/(yr_2020)*100) %>% 
+  arrange(perc_change_ladder_score)
+```
+
+
+## social support
+
+```{r}
+n_top_soc_support <- specific %>% 
+  select(country_name, social_support, year)
+n_top_soc_support
+```
+
+```{r}
+n_top_soc_support <- n_top_soc_support %>% 
+   pivot_wider(names_from= "year", names_prefix = "yr_", values_from = social_support)
+```
+```{r}
+n_top_soc_support <- n_top_soc_support %>% 
+  select(country_name, yr_2020, yr_2021)
+```
+```{r}
+n_top_soc_support %>% 
+  filter(country_name == "Finland" | country_name == "Denmark" | country_name== "Switzerland" | country_name == "Iceland" | country_name == "Netherlands" | country_name == "Norway") %>% 
+  mutate(perc_change_soc_supp = (yr_2021-yr_2020)/(yr_2020)*100) %>% 
+  arrange(perc_change_soc_supp)
+```
+
+
+## healthy life expectancy
+
+```{r}
+n_top_life_exp <- specific %>% 
+  select(country_name, healthy_life_expectancy, year)
+n_top_life_exp
+```
+
+```{r}
+n_top_life_exp <- n_top_life_exp %>% 
+   pivot_wider(names_from= "year", names_prefix = "yr_", values_from = healthy_life_expectancy)
+```
+```{r}
+n_top_life_exp <- n_top_life_exp %>% 
+  select(country_name, yr_2020, yr_2021)
+```
+```{r}
+n_top_life_exp %>% 
+  filter(country_name == "Finland" | country_name == "Denmark" | country_name== "Switzerland" | country_name == "Iceland" | country_name == "Netherlands" | country_name == "Norway") %>% 
+  mutate(perc_change_life_exp = (yr_2021-yr_2020)/(yr_2020)*100) %>% 
+  arrange(perc_change_life_exp)
+```

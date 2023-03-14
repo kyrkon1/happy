@@ -80,7 +80,7 @@ library(ggthemes)
 
 #Retrieve Newly Merged Data
 ```{r}
-n_happy <- read.csv(here("merged_happy.csv"))
+n_happy <- read.csv("merged_happy.csv")
 n_happy
 ```
 

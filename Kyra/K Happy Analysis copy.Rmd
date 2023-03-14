@@ -36,7 +36,7 @@ getwd()
 
 #Load 2021 Data
 ```{r}
-happy_2021 <-read.csv("/Users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2021.csv") %>% clean_names()
+happy_2021 <-read.csv("../happiness_data/2021.csv") %>% clean_names()
 happy_2021
 ```
 
@@ -49,7 +49,7 @@ happy_2021
 
 #Load 2020 Data
 ```{r}
-happy_2020 <-read.csv("/users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/2020.csv") %>% clean_names()
+happy_2020 <-read.csv("../happiness_data/2020.csv") %>% clean_names()
 happy_2020
 ```
 
@@ -83,7 +83,7 @@ write.csv(merged_happy,"merged_happy.csv",row.names = F)
 
 #Retrieve Newly Merged Data
 ```{r}
-n_happy <- read.csv("/users/merma/OneDrive/Desktop/happy/happiness_finder/happy_project/happiness_data/merged_happy.csv")
+n_happy <- read.csv("merged_happy.csv")
 n_happy
 ```
 
@@ -539,6 +539,7 @@ n_bottom_happy_ladder_score<-n_bottom_happy_ladder_score %>%
   pivot_wider(names_from= "year", names_prefix = "yr_", values_from = ladder_score) 
 
 ```
+
 ```{r}
 n_bottom_happy_ladder_score <- n_bottom_happy_ladder_score %>% 
   select(country_name, yr_2020, yr_2021)
@@ -550,6 +551,14 @@ n_bottom_happy_ladder_score %>%
   mutate(perc_change_ladder_score = (yr_2021-yr_2020)/(yr_2020)*100) %>% 
   arrange((perc_change_ladder_score))
 ```
+```{r}
+n_bottom_happy_ladder_score %>% 
+  filter(country_name == "Afghanistan" | country_name == "South Sudan" | country_name == "Zimbabwe" | country_name == "Rwanda"| country_name == "Central African Republic" | country_name == "Botswana"| country_name == "Lesotho") %>%  
+  mutate(perc_change_ladder_score = (yr_2021-yr_2020)/(yr_2020)*100) %>% 
+  arrange((perc_change_ladder_score))
+```
+
+
 The one with the greatest decrease in ladder score from the most unhappiest countries from 2020 to 2021 is Zimbabwe (coming from 3rd place in 2020 to 2nd place in 2021). The one with the greatest increase in ladder score in the most unhappiest countries from 2020 to 2021 is Zambia with an 8.3% increase.
 
 For the ones with the least happiest ladder scores:
@@ -578,6 +587,7 @@ n_bottom_happy_life_expectancy <- n_bottom_happy_life_expectancy %>%
 
 ```{r}
 n_bottom_happy_life_expectancy %>% 
+  filter(country_name == "Afghanistan" | country_name == "South Sudan" | country_name == "Zimbabwe" | country_name == "Rwanda"| country_name == "Central African Republic" | country_name == "Botswana"| country_name == "Lesotho")  %>% 
   mutate(perc_change_life_exp = (yr_2021-yr_2020)/(yr_2020)*100) %>% 
   arrange(perc_change_life_exp)
 ```
@@ -612,6 +622,7 @@ n_bottom_social_support <- n_bottom_social_support %>%
 
 ```{r}
 n_bottom_social_support %>% 
+  filter(country_name == "Afghanistan" | country_name == "South Sudan" | country_name == "Zimbabwe" | country_name == "Rwanda"| country_name == "Central African Republic" | country_name == "Botswana"| country_name == "Lesotho") %>% 
   mutate(percentchange_soc_sup = (yr_2021-yr_2020)/(yr_2020)*100) %>% 
   arrange(percentchange_soc_sup)
 ```

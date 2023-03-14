@@ -12108,7 +12108,8 @@ reordermin %>%
   ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill= Factors))+
   geom_col(alpha =0.55)+
   coord_flip()+
-  labs(title= "Least Happiness Scores in 2020", x= "Countries", y= "Factors")
+  labs(title= "Least Happiness Scores in 2020", x= "Countries", y= "Factors")+
+  theme_tufte()
 ```
 
 ![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-32-1.png)<!-- -->
@@ -12170,18 +12171,22 @@ merged_happy %>%
 
 ```r
 reordermin %>% 
-  ggplot(aes(country_name, y= ladder_score, fill= country_name))+
+  ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill= country_name))+
   geom_col()+
-  coord_flip()
+  coord_flip()+
+   theme_tufte()+
+  labs(title= "Bottom Five Countries in 2020", y= "Ladder Score", x = "Country")
 ```
 
 ![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-36-1.png)<!-- -->
 
 ```r
 revampbottom5 %>% 
-  ggplot(aes(x=country_name, y= ladder_score, fill = country_name))+
+  ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill = country_name))+
   geom_col()+
-  coord_flip()
+  coord_flip()+
+  theme_tufte()+
+  labs(title= "Bottom 5 Countries' Ladder Score in 2021", y= "Ladder Score", x= "Country Name")
 ```
 
 ![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-37-1.png)<!-- -->
@@ -12219,7 +12224,7 @@ n_bottom_happy %>%
 ```
 Similar country names are Afghanistan, Rwanda, and Zimbabwe.
 
-Lesotho went from 11th least happiest country in 2020 to the 5th  least happiest country in 2021.
+Lesotho went from 11th least happiest country in 2020 to the 5th least happiest country in 2021.
 Botswana was in 7th least happiest country in 2020 and went to the 4th least happiest country in 2021.
 Central African Republic was the 5th least happiest country in 2020 and was not listed in the dataset in 2021.
 South Sudan was 2nd most least happiest country in 2020 but not listed in the dataset in 2021.
@@ -12297,5 +12302,517 @@ fifth_least_happy
 ![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-43-1.png)<!-- -->
 
 
-# might make a faceted grid for these scores
 
+## app showing factors for bottom 5 countries
+
+pivoting datasets to wider:
+
+```r
+bottom_5_2020 <- reordermin %>% 
+  pivot_wider(names_from = "Factors",
+              values_from= "Score")
+```
+
+
+```r
+bottom5_2021 <-revampbottom5 %>% 
+  pivot_wider(names_from = "Factors",
+              values_from= "Score")
+```
+
+
+
+```r
+bottom_5_2020 %>% 
+  ggplot(aes(x= reorder(country_name,ladder_score),country_name, y= ladder_score, fill= country_name))+
+  geom_col()+
+  coord_flip()
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-46-1.png)<!-- -->
+# Social Support for 2020 and 2021
+
+
+```r
+names(n_bottom_happy)
+```
+
+```
+##  [1] "country_name"                             
+##  [2] "regional_indicator"                       
+##  [3] "ladder_score"                             
+##  [4] "standard_error_of_ladder_score"           
+##  [5] "upperwhisker"                             
+##  [6] "lowerwhisker"                             
+##  [7] "logged_gdp_per_capita"                    
+##  [8] "social_support"                           
+##  [9] "healthy_life_expectancy"                  
+## [10] "freedom_to_make_life_choices"             
+## [11] "generosity"                               
+## [12] "perceptions_of_corruption"                
+## [13] "ladder_score_in_dystopia"                 
+## [14] "explained_by_log_gdp_per_capita"          
+## [15] "explained_by_social_support"              
+## [16] "explained_by_healthy_life_expectancy"     
+## [17] "explained_by_freedom_to_make_life_choices"
+## [18] "explained_by_generosity"                  
+## [19] "explained_by_perceptions_of_corruption"   
+## [20] "dystopia_residual"                        
+## [21] "year"
+```
+
+
+
+```r
+social_support_afghanistan <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Afghanistan") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Afghanistan from 2020-2021")
+social_support_afghanistan
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-48-1.png)<!-- -->
+
+
+
+```r
+social_support_zimbabwe <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Zimbabwe") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Zimbabwe from 2020-2021")
+social_support_zimbabwe
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-49-1.png)<!-- -->
+
+
+```r
+social_support_rwanda <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Rwanda") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Rwanda from 2020-2021")
+social_support_rwanda
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-50-1.png)<!-- -->
+
+
+```r
+social_support_botswana <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Botswana") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Botswana from 2020-2021")
+social_support_botswana
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-51-1.png)<!-- -->
+
+```r
+social_support_lesotho <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Lesotho") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Lesotho from 2020-2021")
+social_support_lesotho
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-52-1.png)<!-- -->
+## Life Expectancy changes in bottom 5 countries from 2020-2021
+
+```r
+names(n_bottom_happy)
+```
+
+```
+##  [1] "country_name"                             
+##  [2] "regional_indicator"                       
+##  [3] "ladder_score"                             
+##  [4] "standard_error_of_ladder_score"           
+##  [5] "upperwhisker"                             
+##  [6] "lowerwhisker"                             
+##  [7] "logged_gdp_per_capita"                    
+##  [8] "social_support"                           
+##  [9] "healthy_life_expectancy"                  
+## [10] "freedom_to_make_life_choices"             
+## [11] "generosity"                               
+## [12] "perceptions_of_corruption"                
+## [13] "ladder_score_in_dystopia"                 
+## [14] "explained_by_log_gdp_per_capita"          
+## [15] "explained_by_social_support"              
+## [16] "explained_by_healthy_life_expectancy"     
+## [17] "explained_by_freedom_to_make_life_choices"
+## [18] "explained_by_generosity"                  
+## [19] "explained_by_perceptions_of_corruption"   
+## [20] "dystopia_residual"                        
+## [21] "year"
+```
+
+
+
+```r
+life_expectancy_afghanistan <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Afghanistan") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Afghanistan from 2020-2021")
+life_expectancy_afghanistan
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-54-1.png)<!-- -->
+
+
+```r
+life_expectancy_zimbabwe <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Zimbabwe") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Zimbabwe from 2020-2021")
+life_expectancy_zimbabwe
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-55-1.png)<!-- -->
+
+```r
+life_expectancy_rwanda <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Rwanda") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Rwanda from 2020-2021")
+life_expectancy_rwanda
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-56-1.png)<!-- -->
+
+```r
+life_expectancy_botswana <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Botswana") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Botswana from 2020-2021")
+life_expectancy_botswana
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-57-1.png)<!-- -->
+
+
+```r
+life_expectancy_lesotho <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Lesotho") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Lesotho from 2020-2021")
+life_expectancy_lesotho
+```
+
+![](K-Happy-Analysis-copy_files/figure-html/unnamed-chunk-58-1.png)<!-- -->
+
+## statistical analysis of the 3 factors selected: ladder score, life expectancy, and social support 
+
+
+```r
+n_bottom_happy_ladder_score <-n_bottom_happy %>% 
+  select(country_name, ladder_score, year)
+
+n_bottom_happy_ladder_score 
+```
+
+```
+##                country_name ladder_score year
+## 1                      Togo       4.1070 2021
+## 2                    Zambia       4.0730 2021
+## 3              Sierra Leone       3.8490 2021
+## 4                     India       3.8190 2021
+## 5                   Burundi       3.7750 2021
+## 6                     Yemen       3.6580 2021
+## 7                  Tanzania       3.6230 2021
+## 8                     Haiti       3.6150 2021
+## 9                    Malawi       3.6000 2021
+## 10                  Lesotho       3.5120 2021
+## 11                 Botswana       3.4670 2021
+## 12                   Rwanda       3.4150 2021
+## 13                 Zimbabwe       3.1450 2021
+## 14              Afghanistan       2.5230 2021
+## 15                    Egypt       4.1514 2020
+## 16             Sierra Leone       3.9264 2020
+## 17                  Burundi       3.7753 2020
+## 18                   Zambia       3.7594 2020
+## 19                    Haiti       3.7208 2020
+## 20                  Lesotho       3.6528 2020
+## 21                    India       3.5733 2020
+## 22                   Malawi       3.5380 2020
+## 23                    Yemen       3.5274 2020
+## 24                 Botswana       3.4789 2020
+## 25                 Tanzania       3.4762 2020
+## 26 Central African Republic       3.4759 2020
+## 27                   Rwanda       3.3123 2020
+## 28                 Zimbabwe       3.2992 2020
+## 29              South Sudan       2.8166 2020
+## 30              Afghanistan       2.5669 2020
+```
+
+```r
+n_bottom_happy_ladder_score<-n_bottom_happy_ladder_score %>% 
+  pivot_wider(names_from= "year", names_prefix = "yr_", values_from = ladder_score) 
+```
+
+```r
+n_bottom_happy_ladder_score <- n_bottom_happy_ladder_score %>% 
+  select(country_name, yr_2020, yr_2021)
+n_bottom_happy_ladder_score
+```
+
+```
+## # A tibble: 17 × 3
+##    country_name             yr_2020 yr_2021
+##    <chr>                      <dbl>   <dbl>
+##  1 Togo                       NA       4.11
+##  2 Zambia                      3.76    4.07
+##  3 Sierra Leone                3.93    3.85
+##  4 India                       3.57    3.82
+##  5 Burundi                     3.78    3.78
+##  6 Yemen                       3.53    3.66
+##  7 Tanzania                    3.48    3.62
+##  8 Haiti                       3.72    3.62
+##  9 Malawi                      3.54    3.6 
+## 10 Lesotho                     3.65    3.51
+## 11 Botswana                    3.48    3.47
+## 12 Rwanda                      3.31    3.42
+## 13 Zimbabwe                    3.30    3.14
+## 14 Afghanistan                 2.57    2.52
+## 15 Egypt                       4.15   NA   
+## 16 Central African Republic    3.48   NA   
+## 17 South Sudan                 2.82   NA
+```
+
+
+```r
+n_bottom_happy_ladder_score %>% 
+  mutate(diff_ladd_score = (yr_2020-yr_2021)) %>% 
+  arrange(desc(diff_ladd_score))
+```
+
+```
+## # A tibble: 17 × 4
+##    country_name             yr_2020 yr_2021 diff_ladd_score
+##    <chr>                      <dbl>   <dbl>           <dbl>
+##  1 Zimbabwe                    3.30    3.14        0.154   
+##  2 Lesotho                     3.65    3.51        0.141   
+##  3 Haiti                       3.72    3.62        0.106   
+##  4 Sierra Leone                3.93    3.85        0.0774  
+##  5 Afghanistan                 2.57    2.52        0.0439  
+##  6 Botswana                    3.48    3.47        0.0119  
+##  7 Burundi                     3.78    3.78        0.000300
+##  8 Malawi                      3.54    3.6        -0.0620  
+##  9 Rwanda                      3.31    3.42       -0.103   
+## 10 Yemen                       3.53    3.66       -0.131   
+## 11 Tanzania                    3.48    3.62       -0.147   
+## 12 India                       3.57    3.82       -0.246   
+## 13 Zambia                      3.76    4.07       -0.314   
+## 14 Togo                       NA       4.11       NA       
+## 15 Egypt                       4.15   NA          NA       
+## 16 Central African Republic    3.48   NA          NA       
+## 17 South Sudan                 2.82   NA          NA
+```
+
+
+
+```r
+n_bottom_happy_life_expectancy <-n_bottom_happy %>% 
+  select(country_name, healthy_life_expectancy, year)
+
+n_bottom_happy_life_expectancy
+```
+
+```
+##                country_name healthy_life_expectancy year
+## 1                      Togo                54.91400 2021
+## 2                    Zambia                55.80900 2021
+## 3              Sierra Leone                51.65100 2021
+## 4                     India                60.63300 2021
+## 5                   Burundi                53.40000 2021
+## 6                     Yemen                57.12200 2021
+## 7                  Tanzania                57.99900 2021
+## 8                     Haiti                55.70000 2021
+## 9                    Malawi                57.94800 2021
+## 10                  Lesotho                48.70000 2021
+## 11                 Botswana                59.26900 2021
+## 12                   Rwanda                61.40000 2021
+## 13                 Zimbabwe                56.20100 2021
+## 14              Afghanistan                52.49300 2021
+## 15                    Egypt                61.78015 2020
+## 16             Sierra Leone                50.86514 2020
+## 17                  Burundi                53.40000 2020
+## 18                   Zambia                55.29938 2020
+## 19                    Haiti                55.59863 2020
+## 20                  Lesotho                48.00362 2020
+## 21                    India                60.21519 2020
+## 22                   Malawi                57.59289 2020
+## 23                    Yemen                56.72728 2020
+## 24                 Botswana                58.92445 2020
+## 25                 Tanzania                57.49607 2020
+## 26 Central African Republic                45.20000 2020
+## 27                   Rwanda                61.09885 2020
+## 28                 Zimbabwe                55.61726 2020
+## 29              South Sudan                51.00000 2020
+## 30              Afghanistan                52.59000 2020
+```
+
+```r
+n_bottom_happy_life_expectancy <-n_bottom_happy_life_expectancy  %>% 
+  pivot_wider(names_from= year,names_prefix = "yr_",  values_from = healthy_life_expectancy) 
+```
+
+```r
+n_bottom_happy_life_expectancy <- n_bottom_happy_life_expectancy %>% 
+  select(country_name, yr_2020, yr_2021)
+```
+
+
+```r
+n_bottom_happy_life_expectancy %>% 
+  mutate(diff_life_exp = yr_2020-yr_2021) %>% 
+  arrange(desc(diff_life_exp))
+```
+
+```
+## # A tibble: 17 × 4
+##    country_name             yr_2020 yr_2021 diff_life_exp
+##    <chr>                      <dbl>   <dbl>         <dbl>
+##  1 Afghanistan                 52.6    52.5    0.0970    
+##  2 Burundi                     53.4    53.4    0.00000153
+##  3 Haiti                       55.6    55.7   -0.101     
+##  4 Rwanda                      61.1    61.4   -0.301     
+##  5 Botswana                    58.9    59.3   -0.345     
+##  6 Malawi                      57.6    57.9   -0.355     
+##  7 Yemen                       56.7    57.1   -0.395     
+##  8 India                       60.2    60.6   -0.418     
+##  9 Tanzania                    57.5    58.0   -0.503     
+## 10 Zambia                      55.3    55.8   -0.510     
+## 11 Zimbabwe                    55.6    56.2   -0.584     
+## 12 Lesotho                     48.0    48.7   -0.696     
+## 13 Sierra Leone                50.9    51.7   -0.786     
+## 14 Togo                        NA      54.9   NA         
+## 15 Egypt                       61.8    NA     NA         
+## 16 Central African Republic    45.2    NA     NA         
+## 17 South Sudan                 51      NA     NA
+```
+Out of the least happiest countries, the one with the most change in life expectancy is Sierra Leone, it decreased in life expectancy by about 0.78 of a year. Afghanistan had the least amount of change between 2021 and 2020, since the life expectancy barely increased by 0.097.
+
+
+```r
+n_bottom_social_support <-n_bottom_happy %>% 
+  select(country_name, social_support, year)
+n_bottom_social_support
+```
+
+```
+##                country_name social_support year
+## 1                      Togo      0.5690000 2021
+## 2                    Zambia      0.7080000 2021
+## 3              Sierra Leone      0.6300000 2021
+## 4                     India      0.6030000 2021
+## 5                   Burundi      0.4900000 2021
+## 6                     Yemen      0.8320000 2021
+## 7                  Tanzania      0.7020000 2021
+## 8                     Haiti      0.5400000 2021
+## 9                    Malawi      0.5370000 2021
+## 10                  Lesotho      0.7870000 2021
+## 11                 Botswana      0.7840000 2021
+## 12                   Rwanda      0.5520000 2021
+## 13                 Zimbabwe      0.7500000 2021
+## 14              Afghanistan      0.4630000 2021
+## 15                    Egypt      0.7354478 2020
+## 16             Sierra Leone      0.6361420 2020
+## 17                  Burundi      0.4903257 2020
+## 18                   Zambia      0.6988245 2020
+## 19                    Haiti      0.5932478 2020
+## 20                  Lesotho      0.7804957 2020
+## 21                    India      0.5922009 2020
+## 22                   Malawi      0.5440073 2020
+## 23                    Yemen      0.8179806 2020
+## 24                 Botswana      0.7791218 2020
+## 25                 Tanzania      0.6889332 2020
+## 26 Central African Republic      0.3194599 2020
+## 27                   Rwanda      0.5408354 2020
+## 28                 Zimbabwe      0.7630928 2020
+## 29              South Sudan      0.5537071 2020
+## 30              Afghanistan      0.4703670 2020
+```
+
+
+```r
+n_bottom_social_support <- n_bottom_social_support %>% 
+  pivot_wider(names_from = year,names_prefix = "yr_",  values_from = social_support)
+```
+
+
+```r
+n_bottom_social_support <- n_bottom_social_support %>% 
+  select(country_name, yr_2020, yr_2021)
+```
+
+
+
+```r
+n_bottom_social_support %>% 
+  mutate(diff_soc_sup = yr_2020-yr_2021) %>% 
+  arrange(desc(diff_soc_sup))
+```
+
+```
+## # A tibble: 17 × 4
+##    country_name             yr_2020 yr_2021 diff_soc_sup
+##    <chr>                      <dbl>   <dbl>        <dbl>
+##  1 Haiti                      0.593   0.54      0.0532  
+##  2 Zimbabwe                   0.763   0.75      0.0131  
+##  3 Afghanistan                0.470   0.463     0.00737 
+##  4 Malawi                     0.544   0.537     0.00701 
+##  5 Sierra Leone               0.636   0.63      0.00614 
+##  6 Burundi                    0.490   0.49      0.000326
+##  7 Botswana                   0.779   0.784    -0.00488 
+##  8 Lesotho                    0.780   0.787    -0.00650 
+##  9 Zambia                     0.699   0.708    -0.00918 
+## 10 India                      0.592   0.603    -0.0108  
+## 11 Rwanda                     0.541   0.552    -0.0112  
+## 12 Tanzania                   0.689   0.702    -0.0131  
+## 13 Yemen                      0.818   0.832    -0.0140  
+## 14 Togo                      NA       0.569    NA       
+## 15 Egypt                      0.735  NA        NA       
+## 16 Central African Republic   0.319  NA        NA       
+## 17 South Sudan                0.554  NA        NA
+```
+Out of the least unhappiest countries, Yemen had the most change in the

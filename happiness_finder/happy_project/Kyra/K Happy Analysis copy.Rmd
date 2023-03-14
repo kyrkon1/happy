@@ -532,11 +532,68 @@ life_expectancy_lesotho
 n_bottom_happy_ladder_score <-n_bottom_happy %>% 
   select(country_name, ladder_score, year)
 
-n_bottom_happy_ladder_score
-```
-```{r}
 n_bottom_happy_ladder_score 
 ```
+```{r}
+n_bottom_happy_ladder_score<-n_bottom_happy_ladder_score %>% 
+  pivot_wider(names_from= "year", names_prefix = "yr_", values_from = ladder_score) 
+
+```
+```{r}
+n_bottom_happy_ladder_score <- n_bottom_happy_ladder_score %>% 
+  select(country_name, yr_2020, yr_2021)
+n_bottom_happy_ladder_score
+```
+
+```{r}
+n_bottom_happy_ladder_score %>% 
+  mutate(diff_ladd_score = (yr_2020-yr_2021)) %>% 
+  arrange(desc(diff_ladd_score))
+```
 
 
+```{r}
+n_bottom_happy_life_expectancy <-n_bottom_happy %>% 
+  select(country_name, healthy_life_expectancy, year)
 
+n_bottom_happy_life_expectancy
+```
+```{r}
+n_bottom_happy_life_expectancy <-n_bottom_happy_life_expectancy  %>% 
+  pivot_wider(names_from= year,names_prefix = "yr_",  values_from = healthy_life_expectancy) 
+```
+```{r}
+n_bottom_happy_life_expectancy <- n_bottom_happy_life_expectancy %>% 
+  select(country_name, yr_2020, yr_2021)
+```
+
+```{r}
+n_bottom_happy_life_expectancy %>% 
+  mutate(diff_life_exp = yr_2020-yr_2021) %>% 
+  arrange(desc(diff_life_exp))
+```
+Out of the least happiest countries, the one with the most change in life expectancy is Sierra Leone, it decreased in life expectancy by about 0.78 of a year. Afghanistan had the least amount of change between 2021 and 2020, since the life expectancy barely increased by 0.097.
+
+```{r}
+n_bottom_social_support <-n_bottom_happy %>% 
+  select(country_name, social_support, year)
+n_bottom_social_support
+```
+
+```{r}
+n_bottom_social_support <- n_bottom_social_support %>% 
+  pivot_wider(names_from = year,names_prefix = "yr_",  values_from = social_support)
+```
+
+```{r}
+n_bottom_social_support <- n_bottom_social_support %>% 
+  select(country_name, yr_2020, yr_2021)
+```
+
+
+```{r}
+n_bottom_social_support %>% 
+  mutate(diff_soc_sup = yr_2020-yr_2021) %>% 
+  arrange(desc(diff_soc_sup))
+```
+Out of the least unhappiest countries, Yemen had the most change in the

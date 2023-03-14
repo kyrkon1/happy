@@ -130,7 +130,7 @@ summary(mapdata2020$social_support)
 
 ```{r}
 map_socialsupport<-ggplot(mapdata2020, aes(x = long, y= lat, group = group, fill = "social_support"))+
-  geom_polygon(aes(fill="social_support"), color= "black")
+  geom_polygon(aes(fill=social_support), color= "black")
 map_socialsupport
 ```
 

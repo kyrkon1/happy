@@ -251,7 +251,9 @@ reordermin %>%
   ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill= Factors))+
   geom_col(alpha =0.55)+
   coord_flip()+
-  labs(title= "Least Happiness Scores in 2020", x= "Countries", y= "Factors")
+  labs(title= "Least Happiness Scores in 2020", x= "Countries", y= "Factors")+
+  theme_tufte()
+  
 ```
 
 ## analysis for bottom 5 countries ladder scores 
@@ -281,15 +283,19 @@ merged_happy %>%
 ```
 ```{r}
 reordermin %>% 
-  ggplot(aes(country_name, y= ladder_score, fill= country_name))+
+  ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill= country_name))+
   geom_col()+
-  coord_flip()
+  coord_flip()+
+   theme_tufte()+
+  labs(title= "Bottom Five Countries in 2020", y= "Ladder Score", x = "Country")
 ```
 ```{r}
 revampbottom5 %>% 
-  ggplot(aes(x=country_name, y= ladder_score, fill = country_name))+
+  ggplot(aes(x= reorder(country_name,ladder_score), country_name, y= ladder_score, fill = country_name))+
   geom_col()+
-  coord_flip()
+  coord_flip()+
+  theme_tufte()+
+  labs(title= "Bottom 5 Countries' Ladder Score in 2021", y= "Ladder Score", x= "Country Name")
 ```
 
 ```{r}
@@ -300,7 +306,7 @@ n_bottom_happy %>%
 ```
 Similar country names are Afghanistan, Rwanda, and Zimbabwe.
 
-Lesotho went from 11th least happiest country in 2020 to the 5th  least happiest country in 2021.
+Lesotho went from 11th least happiest country in 2020 to the 5th least happiest country in 2021.
 Botswana was in 7th least happiest country in 2020 and went to the 4th least happiest country in 2021.
 Central African Republic was the 5th least happiest country in 2020 and was not listed in the dataset in 2021.
 South Sudan was 2nd most least happiest country in 2020 but not listed in the dataset in 2021.
@@ -363,5 +369,174 @@ fifth_least_happy
 ```
 
 
-# might make a faceted grid for these scores
+
+## app showing factors for bottom 5 countries
+
+pivoting datasets to wider:
+```{r}
+bottom_5_2020 <- reordermin %>% 
+  pivot_wider(names_from = "Factors",
+              values_from= "Score")
+```
+
+```{r}
+bottom5_2021 <-revampbottom5 %>% 
+  pivot_wider(names_from = "Factors",
+              values_from= "Score")
+```
+
+
+```{r}
+bottom_5_2020 %>% 
+  ggplot(aes(x= reorder(country_name,ladder_score),country_name, y= ladder_score, fill= country_name))+
+  geom_col()+
+  coord_flip()
+```
+# Social Support for 2020 and 2021
+
+```{r}
+names(n_bottom_happy)
+```
+
+
+```{r}
+
+social_support_afghanistan <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Afghanistan") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Afghanistan from 2020-2021")
+social_support_afghanistan
+
+```
+
+
+```{r}
+social_support_zimbabwe <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Zimbabwe") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Zimbabwe from 2020-2021")
+social_support_zimbabwe
+
+```
+
+```{r}
+social_support_rwanda <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Rwanda") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Rwanda from 2020-2021")
+social_support_rwanda
+
+```
+
+```{r}
+social_support_botswana <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Botswana") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Botswana from 2020-2021")
+social_support_botswana
+```
+```{r}
+social_support_lesotho <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Lesotho") %>% 
+  ggplot(aes(x=year,y= social_support))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Social Support",title="Trend in Social Support for Lesotho from 2020-2021")
+social_support_lesotho
+```
+## Life Expectancy changes in bottom 5 countries from 2020-2021
+```{r}
+names(n_bottom_happy)
+```
+
+
+```{r}
+life_expectancy_afghanistan <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Afghanistan") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Afghanistan from 2020-2021")
+life_expectancy_afghanistan
+```
+
+```{r}
+life_expectancy_zimbabwe <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Zimbabwe") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Zimbabwe from 2020-2021")
+life_expectancy_zimbabwe
+```
+```{r}
+life_expectancy_rwanda <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Rwanda") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Rwanda from 2020-2021")
+life_expectancy_rwanda
+```
+```{r}
+life_expectancy_botswana <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Botswana") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Botswana from 2020-2021")
+life_expectancy_botswana
+```
+
+```{r}
+life_expectancy_lesotho <- n_bottom_happy %>% 
+ group_by(year) %>% 
+  filter(country_name=="Lesotho") %>% 
+  ggplot(aes(x=year,y= healthy_life_expectancy))+
+  geom_line()+
+      theme_tufte()+
+        theme(panel.background = element_rect(fill = "linen"))+
+  labs(x = "Year", y = "Healthy Life Expectancy",title="Trend in Life Expectancy for Lesotho from 2020-2021")
+life_expectancy_lesotho
+```
+
+## statistical analysis of the 3 factors selected: ladder score, life expectancy, and social support 
+
+```{r}
+n_bottom_happy_ladder_score <-n_bottom_happy %>% 
+  select(country_name, ladder_score, year)
+
+n_bottom_happy_ladder_score
+```
+```{r}
+n_bottom_happy_ladder_score 
+```
+
+
 

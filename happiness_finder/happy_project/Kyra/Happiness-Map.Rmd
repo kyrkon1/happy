@@ -40,6 +40,7 @@ library(rworldmap)
 #library(tmap)
 library(sf)
 library(mapproj)
+library(ggthemes)
 ```
 ```{r}
 getwd()
@@ -98,15 +99,32 @@ mapdata2020<-left_join(mapdata2020,happy_2020, by="region")
 
 ```{r}
 mapdata2021<-map_data("world")
-view(mapdata2021)
+
 ```
 
 ```{r}
 mapdata2021 <-left_join(mapdata2021, happy_2021, by="region")
-View(mapdata2021)
 ```
+
 ```{r}
 glimpse(mapdata2020)
+```
+
+
+```{r}
+merged_happy <-read.csv("../happiness_data/merged_happy.csv")
+```
+```{r}
+merged_happy<-merged_happy %>% 
+  rename(region= "country_name")
+```
+
+```{r}
+mapdatahappy <-map_data("world")
+glimpse(mapdatahappy)
+```
+```{r}
+mapdatahappy <-left_join(mapdatahappy, merged_happy, by= "region")
 ```
 
 
@@ -176,6 +194,17 @@ map2_healthy_life_expectancy <-mapdata2021 %>%
 map2_healthy_life_expectancy+
   scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")
 ```
+
+# making a map with the merged data happy
+
+```{r}
+mapdatahappy %>% 
+   ggplot(aes(x=long, y=lat,group=group))+
+  geom_polygon(aes(fill=healthy_life_expectancy), color= "black")+
+  scale_fill_gradient(name = "range of factor", low = "yellow", high= "dark blue", na.value = "grey50")
+```
+
+
 ## making a shiny app for the factors that we are interested in
 Factors: social_support, healthy_life_expectancy, freedom_to_make_life_choices, generosity, perceptions_of_corruption, ladder_score
 
@@ -201,7 +230,8 @@ server <- function(input, output, session) {
     ggplot(mapdata2020,aes(x=long, y=lat,group=group))+
   geom_polygon(aes_string(fill=input$x), color= "black")+
        scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")+
-      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors in 2020")
+      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors in 2020")+
+      theme_tufte()
       
   })
   
@@ -229,7 +259,8 @@ server <- function(input, output, session) {
     ggplot(mapdata2021,aes(x=long, y=lat,group=group))+
   geom_polygon(aes_string(fill=input$x), color= "black")+
        scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "grey50")+
-      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors in 2021")
+      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors in 2021")+
+      theme_tufte()
       
   })
   
@@ -237,3 +268,33 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
+
+## Shiny app for Merged Mapdata for 2020 and 2021
+```{r}
+library(shiny)
+
+ui <-dashboardPage(
+  dashboardHeader(title="World Map Happiness for 2020 and 2021"),
+  dashboardSidebar(disable =T),
+  dashboardBody(selectInput("w", "Select Factor Variable", choices =c("ladder_score", "social_support", "healthy_life_expectancy", "freedom_to_make_life_choices", "generosity", "perceptions_of_corruption"), selected= "ladder_score"),
+                radioButtons("z","Select Year", choices = c("2020", "2021")),
+                           plotOutput("plot", width = "800px", height = "400px")
+                                        ))
+
+
+
+server <- function(input, output, session) {
+  session$onSessionEnded(stopApp)
+  output$plot <- renderPlot({
+    mapdatahappy %>% 
+      filter(year == input$z) %>% 
+    ggplot(aes(x=long, y=lat, group=group))+
+  geom_polygon(aes_string(fill=input$w), color= "black")+
+       scale_fill_gradient(name= "Range of Factor", low = "yellow", high = "dark blue", na.value = "white")+
+      labs(x= "Longitude", y= "Latitude", title = "Global Happiness by Factors from 2020 to 2021")
+  })
+}
+
+shinyApp(ui, server)
+```
+

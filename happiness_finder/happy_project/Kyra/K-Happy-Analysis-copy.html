@@ -12597,28 +12597,39 @@ n_bottom_happy_ladder_score</code></pre>
 ## 16 Central African Republic    3.48   NA   
 ## 17 South Sudan                 2.82   NA</code></pre>
 <pre class="r"><code>n_bottom_happy_ladder_score %&gt;% 
-  mutate(diff_ladd_score = (yr_2020-yr_2021)) %&gt;% 
-  arrange(desc(diff_ladd_score))</code></pre>
+  mutate(perc_change_ladder_score = (yr_2021-yr_2020)/(yr_2020)*100) %&gt;% 
+  arrange((perc_change_ladder_score))</code></pre>
 <pre><code>## # A tibble: 17 × 4
-##    country_name             yr_2020 yr_2021 diff_ladd_score
-##    &lt;chr&gt;                      &lt;dbl&gt;   &lt;dbl&gt;           &lt;dbl&gt;
-##  1 Zimbabwe                    3.30    3.14        0.154   
-##  2 Lesotho                     3.65    3.51        0.141   
-##  3 Haiti                       3.72    3.62        0.106   
-##  4 Sierra Leone                3.93    3.85        0.0774  
-##  5 Afghanistan                 2.57    2.52        0.0439  
-##  6 Botswana                    3.48    3.47        0.0119  
-##  7 Burundi                     3.78    3.78        0.000300
-##  8 Malawi                      3.54    3.6        -0.0620  
-##  9 Rwanda                      3.31    3.42       -0.103   
-## 10 Yemen                       3.53    3.66       -0.131   
-## 11 Tanzania                    3.48    3.62       -0.147   
-## 12 India                       3.57    3.82       -0.246   
-## 13 Zambia                      3.76    4.07       -0.314   
-## 14 Togo                       NA       4.11       NA       
-## 15 Egypt                       4.15   NA          NA       
-## 16 Central African Republic    3.48   NA          NA       
-## 17 South Sudan                 2.82   NA          NA</code></pre>
+##    country_name             yr_2020 yr_2021 perc_change_ladder_score
+##    &lt;chr&gt;                      &lt;dbl&gt;   &lt;dbl&gt;                    &lt;dbl&gt;
+##  1 Zimbabwe                    3.30    3.14                 -4.67   
+##  2 Lesotho                     3.65    3.51                 -3.85   
+##  3 Haiti                       3.72    3.62                 -2.84   
+##  4 Sierra Leone                3.93    3.85                 -1.97   
+##  5 Afghanistan                 2.57    2.52                 -1.71   
+##  6 Botswana                    3.48    3.47                 -0.342  
+##  7 Burundi                     3.78    3.78                 -0.00795
+##  8 Malawi                      3.54    3.6                   1.75   
+##  9 Rwanda                      3.31    3.42                  3.10   
+## 10 Yemen                       3.53    3.66                  3.70   
+## 11 Tanzania                    3.48    3.62                  4.22   
+## 12 India                       3.57    3.82                  6.88   
+## 13 Zambia                      3.76    4.07                  8.34   
+## 14 Togo                       NA       4.11                 NA      
+## 15 Egypt                       4.15   NA                    NA      
+## 16 Central African Republic    3.48   NA                    NA      
+## 17 South Sudan                 2.82   NA                    NA</code></pre>
+<p>The one with the greatest decrease in ladder score from the most
+unhappiest countries from 2020 to 2021 is Zimbabwe (coming from 3rd
+place in 2020 to 2nd place in 2021). The one with the greatest increase
+in ladder score in the most unhappiest countries from 2020 to 2021 is
+Zambia with an 8.3% increase.</p>
+<p>For the ones with the least happiest ladder scores: Afghanistan
+decreased in ladder score by -1.71% South Sudan had no data in 2021 so
+NA for percent change Zimbabwe decreased in ladder score by -4.67%.
+Rwanda increased in ladder score by 3.1% Central African Republic had no
+data in 2021, so NA for percent change Botswana decreased in ladder
+score by -0.34%. Lesotho decreased in ladder score by -3.85%</p>
 <pre class="r"><code>n_bottom_happy_life_expectancy &lt;-n_bottom_happy %&gt;% 
   select(country_name, healthy_life_expectancy, year)
 
@@ -12659,32 +12670,41 @@ n_bottom_happy_life_expectancy</code></pre>
 <pre class="r"><code>n_bottom_happy_life_expectancy &lt;- n_bottom_happy_life_expectancy %&gt;% 
   select(country_name, yr_2020, yr_2021)</code></pre>
 <pre class="r"><code>n_bottom_happy_life_expectancy %&gt;% 
-  mutate(diff_life_exp = yr_2020-yr_2021) %&gt;% 
-  arrange(desc(diff_life_exp))</code></pre>
+  mutate(perc_change_life_exp = (yr_2021-yr_2020)/(yr_2020)*100) %&gt;% 
+  arrange(perc_change_life_exp)</code></pre>
 <pre><code>## # A tibble: 17 × 4
-##    country_name             yr_2020 yr_2021 diff_life_exp
-##    &lt;chr&gt;                      &lt;dbl&gt;   &lt;dbl&gt;         &lt;dbl&gt;
-##  1 Afghanistan                 52.6    52.5    0.0970    
-##  2 Burundi                     53.4    53.4    0.00000153
-##  3 Haiti                       55.6    55.7   -0.101     
-##  4 Rwanda                      61.1    61.4   -0.301     
-##  5 Botswana                    58.9    59.3   -0.345     
-##  6 Malawi                      57.6    57.9   -0.355     
-##  7 Yemen                       56.7    57.1   -0.395     
-##  8 India                       60.2    60.6   -0.418     
-##  9 Tanzania                    57.5    58.0   -0.503     
-## 10 Zambia                      55.3    55.8   -0.510     
-## 11 Zimbabwe                    55.6    56.2   -0.584     
-## 12 Lesotho                     48.0    48.7   -0.696     
-## 13 Sierra Leone                50.9    51.7   -0.786     
-## 14 Togo                        NA      54.9   NA         
-## 15 Egypt                       61.8    NA     NA         
-## 16 Central African Republic    45.2    NA     NA         
-## 17 South Sudan                 51      NA     NA</code></pre>
-<p>Out of the least happiest countries, the one with the most change in
-life expectancy is Sierra Leone, it decreased in life expectancy by
-about 0.78 of a year. Afghanistan had the least amount of change between
-2021 and 2020, since the life expectancy barely increased by 0.097.</p>
+##    country_name             yr_2020 yr_2021 perc_change_life_exp
+##    &lt;chr&gt;                      &lt;dbl&gt;   &lt;dbl&gt;                &lt;dbl&gt;
+##  1 Afghanistan                 52.6    52.5          -0.184     
+##  2 Burundi                     53.4    53.4          -0.00000287
+##  3 Haiti                       55.6    55.7           0.182     
+##  4 Rwanda                      61.1    61.4           0.493     
+##  5 Botswana                    58.9    59.3           0.585     
+##  6 Malawi                      57.6    57.9           0.617     
+##  7 India                       60.2    60.6           0.694     
+##  8 Yemen                       56.7    57.1           0.696     
+##  9 Tanzania                    57.5    58.0           0.875     
+## 10 Zambia                      55.3    55.8           0.922     
+## 11 Zimbabwe                    55.6    56.2           1.05      
+## 12 Lesotho                     48.0    48.7           1.45      
+## 13 Sierra Leone                50.9    51.7           1.54      
+## 14 Togo                        NA      54.9          NA         
+## 15 Egypt                       61.8    NA            NA         
+## 16 Central African Republic    45.2    NA            NA         
+## 17 South Sudan                 51      NA            NA</code></pre>
+<p>The country that decreased the most in healthy life expectancy is
+Afghanistan and the one that increased the most in healthy life
+expectancy is Sierra Leone. No information was found for Togo, Egypt,
+Central African Republic or South Sudan since they had no data in either
+one or the other datasets in 2020 or 2021.</p>
+<p>For the ones with the least happiest countries’ ladder scores:</p>
+<p>Afghanistan decreased in healthy life expectancy by -1.84<em>10^-1%
+South Sudan had no data in 2021, so NA for percent change for life
+expectancy Zimbabwe increased in life expectancy by 1.049% Rwanda
+increased in life expectancy by 4.92</em>10^-1%. Central African
+Republic had no data in 2021, so NA for percent change in life
+expectancy Botswana increased in life expectancy by 5.84x10^-1% Lesotho
+increased in life expectancy by 1.45%</p>
 <pre class="r"><code>n_bottom_social_support &lt;-n_bottom_happy %&gt;% 
   select(country_name, social_support, year)
 n_bottom_social_support</code></pre>
@@ -12724,30 +12744,38 @@ n_bottom_social_support</code></pre>
 <pre class="r"><code>n_bottom_social_support &lt;- n_bottom_social_support %&gt;% 
   select(country_name, yr_2020, yr_2021)</code></pre>
 <pre class="r"><code>n_bottom_social_support %&gt;% 
-  mutate(diff_soc_sup = yr_2020-yr_2021) %&gt;% 
-  arrange(desc(diff_soc_sup))</code></pre>
+  mutate(percentchange_soc_sup = (yr_2021-yr_2020)/(yr_2020)*100) %&gt;% 
+  arrange(percentchange_soc_sup)</code></pre>
 <pre><code>## # A tibble: 17 × 4
-##    country_name             yr_2020 yr_2021 diff_soc_sup
-##    &lt;chr&gt;                      &lt;dbl&gt;   &lt;dbl&gt;        &lt;dbl&gt;
-##  1 Haiti                      0.593   0.54      0.0532  
-##  2 Zimbabwe                   0.763   0.75      0.0131  
-##  3 Afghanistan                0.470   0.463     0.00737 
-##  4 Malawi                     0.544   0.537     0.00701 
-##  5 Sierra Leone               0.636   0.63      0.00614 
-##  6 Burundi                    0.490   0.49      0.000326
-##  7 Botswana                   0.779   0.784    -0.00488 
-##  8 Lesotho                    0.780   0.787    -0.00650 
-##  9 Zambia                     0.699   0.708    -0.00918 
-## 10 India                      0.592   0.603    -0.0108  
-## 11 Rwanda                     0.541   0.552    -0.0112  
-## 12 Tanzania                   0.689   0.702    -0.0131  
-## 13 Yemen                      0.818   0.832    -0.0140  
-## 14 Togo                      NA       0.569    NA       
-## 15 Egypt                      0.735  NA        NA       
-## 16 Central African Republic   0.319  NA        NA       
-## 17 South Sudan                0.554  NA        NA</code></pre>
-<p>Out of the least unhappiest countries, Yemen had the most change in
-the</p>
+##    country_name             yr_2020 yr_2021 percentchange_soc_sup
+##    &lt;chr&gt;                      &lt;dbl&gt;   &lt;dbl&gt;                 &lt;dbl&gt;
+##  1 Haiti                      0.593   0.54                -8.98  
+##  2 Zimbabwe                   0.763   0.75                -1.72  
+##  3 Afghanistan                0.470   0.463               -1.57  
+##  4 Malawi                     0.544   0.537               -1.29  
+##  5 Sierra Leone               0.636   0.63                -0.966 
+##  6 Burundi                    0.490   0.49                -0.0664
+##  7 Botswana                   0.779   0.784                0.626 
+##  8 Lesotho                    0.780   0.787                0.833 
+##  9 Zambia                     0.699   0.708                1.31  
+## 10 Yemen                      0.818   0.832                1.71  
+## 11 India                      0.592   0.603                1.82  
+## 12 Tanzania                   0.689   0.702                1.90  
+## 13 Rwanda                     0.541   0.552                2.06  
+## 14 Togo                      NA       0.569               NA     
+## 15 Egypt                      0.735  NA                   NA     
+## 16 Central African Republic   0.319  NA                   NA     
+## 17 South Sudan                0.554  NA                   NA</code></pre>
+<p>Out of the least unhappiest countries, the one that had the most
+decrease in social support was Haiti, decreased by -8.97% from 2020 to
+2021 and the one that had the most increase in social support was Rwanda
+with 2.06%.</p>
+<p>Out of the least happiest countries in 2020 and 2021: Afghanistan:
+decreased in social support by -1.56% South Sudan: no info in 2021, NA
+for percent change in social support Zimbabwe Rwanda: increased in
+social support by 2.06% Central African Republic: no info in 2021, NA
+for percent change in social support Botswana: increased in social
+support by 0.62% Lesotho: Increased in social support by 0.833%</p>
 </div>
 </div>
 

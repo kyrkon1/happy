@@ -144,13 +144,20 @@ reorder
 #Code for plot(this is specific to tw_narrow(2020 data))
 
 ```{r}
-reorder %>% 
+plot2020 <-reorder %>% 
   group_by(country_name) %>% 
  ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=factors))+
    geom_col(alpha=0.55)+
   coord_flip()+
   labs(title = "The Dependency of Happiness on 7 Factors in 2020", x= "Countries", y="Factors")+
-  theme(axis.text.y =element_text(size=3.0))
+  theme(axis.text.y =element_text(size=3.5))+
+  theme_tufte(base_size=8, ticks = TRUE)
+
+
+
+```
+```{r}
+plot2020
 ```
 
 #Code for plot(this is specific to tw_narrow(2020 data))
@@ -173,14 +180,15 @@ revamp
 ```
 
 ```{r}
-g2<-revamp %>% 
+plot2021 <-revamp %>% 
   group_by(country_name) %>% 
  ggplot(aes(x=reorder(country_name,ladder_score),country_name,y=ladder_score, fill=factors))+
    geom_col(alpha=0.55)+
   coord_flip()+
   labs(title = "The Dependency of Happiness on 7 Factors in 2021", x= "Countries", y="Factors")+
-  theme(axis.text.y =element_text(size=3.5))
-g2
+  theme(axis.text.y =element_text(size=3.5))+
+  theme_tufte(base_size=8, ticks = TRUE)
+
 ```
 
 #Slice Max and Min for Revamp(2021) and Reorder(2020)
